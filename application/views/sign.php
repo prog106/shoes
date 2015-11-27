@@ -12,8 +12,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <form id="efs_form">
-이메일 <input type="text" name="email1" placeholder="이메일" value="" maxlength="20">@<input type="text" name="email2" placeholder="이메일2" value="" maxlength="20">
-<button type="button" id="efs_regist">등록</button>
+이메일 <input type="text" name="email1" placeholder="이메일" value="" maxlength="20">@<input type="text" name="email2" placeholder="이메일2" value="" maxlength="20"><br>
+입력한 이메일로 회원 가입 URL 이 발송됩니다.<br>
+<button type="button" id="efs_regist">회원가입 메일받기</button>
 </form>
 
 <script>

@@ -74,9 +74,10 @@ class Emailforsignbiz extends CI_Model {
     } // }}}
 
     // 정보 조회
-    public function get_emailforsign($email1=null, $email2=null, $efs_code=null, $start_datetime=null, $end_datetime=null) { // {{{
+    public function get_emailforsign($efs_srl=null, $email1=null, $email2=null, $efs_code=null, $start_datetime=null, $end_datetime=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
+        if(!empty($efs_srl)) $sql_param['efs_srl'] = $efs_srl;
         if(!empty($email1)) $sql_param['email1'] = $email1;
         if(!empty($email2)) $sql_param['email2'] = $email2;
         if(!empty($efs_code)) $sql_param['efs_code'] = $efs_code;
