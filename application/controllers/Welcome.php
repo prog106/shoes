@@ -21,6 +21,7 @@ class Welcome extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->library('encryption');
+        $this->load->helper('url');
         $this->load->model('biz/Emailforsignbiz', 'emailforsignbiz');
         $this->efs_hour = "2"; // 인증 가능 시간
         $this->efs_url = "http://shoes.prog106.indoproc.xyz/welcome/auth/";
@@ -64,7 +65,45 @@ class Welcome extends CI_Controller {
 
     // 로그인
     public function login() { // {{{
-        $this->load->view('login');
+
+        $this->load->library('facebook'); // Automatically picks appId and secret from config
+        // OR
+        // You can pass different one like this
+        //$this->load->library('facebook', array(
+        //    'appId' => 'APP_ID',
+        //    'secret' => 'SECRET',
+        //    ));
+
+        $user = $this->facebook->getUser();
+        
+        if ($user) {
+            try {
+                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,birthday');
+            } catch (FacebookApiException $e) {
+                $user = null;
+            }
+        }else {
+            // Solves first time login issue. (Issue: #10)
+            //$this->facebook->destroySession();
+        }
+
+        if ($user) {
+            self::save_login($data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name']);
+            redirect('/', 'refresh');
+
+            $data['logout_url'] = site_url('welcome/logout'); // Logs off application
+            // OR 
+            // Logs off FB!
+            // $data['logout_url'] = $this->facebook->getLogoutUrl();
+
+        } else {
+            $data['login_url'] = $this->facebook->getLoginUrl(array(
+                'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/welcome/login', 
+                'scope' => array('user_birthday,public_profile,email'), // permissions here
+            ));
+        }
+        //debug($data);
+        $this->load->view('login', $data);
     } // }}}
 
     public function ax_set_emailforsign() { // {{{
@@ -127,13 +166,8 @@ class Welcome extends CI_Controller {
         $info = $result['data'][0];
         if($info['status'] === 'normal') {
             if(password_verify($pwd, $info['mem_pwd'])) {
-                // 로그인 성공
-                $loginmember = array(
-                    'mem_srl' => $info['mem_srl'],
-                    'mem_email' => $email,
-                    'mem_name' => $info['mem_name'],
-                );
                 $this->session->set_userdata('loginmember', $loginmember);
+                self::save_login($info['mem_srl'], $email, $info['mem_name']);
                 echo json_encode(ok_result());
                 die;
             } else {
@@ -151,9 +185,21 @@ class Welcome extends CI_Controller {
     } // }}}
 
     public function ax_get_logout() { // {{{
+        $this->load->library('facebook');
+        $this->facebook->destroySession();
         if(!empty($this->session->userdata('loginmember'))) {
             $this->session->unset_userdata('loginmember');
         }
         echo json_encode(ok_result());
+    } // }}}
+
+    private function save_login($srl, $email, $name) { // {{{
+        // 로그인 성공
+        $loginmember = array(
+            'mem_srl' => $srl,
+            'mem_email' => $email,
+            'mem_name' => $name,
+        );
+        $this->session->set_userdata('loginmember', $loginmember);
     } // }}}
 }
