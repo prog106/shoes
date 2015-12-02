@@ -78,7 +78,7 @@ class Welcome extends CI_Controller {
         
         if ($user) {
             try {
-                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,birthday');
+                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,birthday,gender');
             } catch (FacebookApiException $e) {
                 $user = null;
             }
@@ -102,7 +102,7 @@ class Welcome extends CI_Controller {
                 'scope' => array('user_birthday,public_profile,email'), // permissions here
             ));
         }
-        //debug($data);
+        debug($data);
         $this->load->view('login', $data);
     } // }}}
 
