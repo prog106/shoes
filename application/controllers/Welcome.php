@@ -35,12 +35,12 @@ class Welcome extends CI_Controller {
         debug(password_verify('123', $a));*/
         $data = array();
         $data['member'] = $this->session->userdata('loginmember');
-        $this->load->view('welcome', $data);
+        load_view('welcome', $data);
     } // }}}
 
     // 회원가입 절차 1단계
     public function sign() { // {{{
-        $this->load->view('sign');
+        load_view('sign');
 	} // }}}
 
     // 회원가입 절차 2단계
@@ -60,12 +60,15 @@ class Welcome extends CI_Controller {
         $data['email2'] = $email2;
         $data['end'] = $step['end_datetime'];
         $data['efs_srl'] = $step['efs_srl'];
-        $this->load->view('signform', $data);
+        load_view('signform', $data);
     } // }}}
 
     // 로그인
     public function login() { // {{{
+        $member = $this->session->userdata('loginmember');
+        if(!empty($member)) redirect('/', 'refresh');
 
+        // FACEBOOK --- start
         $this->load->library('facebook'); // Automatically picks appId and secret from config
         // OR
         // You can pass different one like this
@@ -75,7 +78,6 @@ class Welcome extends CI_Controller {
         //    ));
 
         $user = $this->facebook->getUser();
-        
         if ($user) {
             try {
                 $data['user_profile'] = $this->facebook->api('/me?fields=name,email,birthday,gender');
@@ -92,8 +94,6 @@ class Welcome extends CI_Controller {
             redirect('/', 'refresh');
 
             $data['logout_url'] = site_url('welcome/logout'); // Logs off application
-            // OR 
-            // Logs off FB!
             // $data['logout_url'] = $this->facebook->getLogoutUrl();
 
         } else {
@@ -102,23 +102,29 @@ class Welcome extends CI_Controller {
                 'scope' => array('user_birthday,public_profile,email'), // permissions here
             ));
         }
-        debug($data);
-        $this->load->view('login', $data);
+        // FACEBOOK --- end
+        load_view('login', $data);
     } // }}}
 
     public function ax_set_emailforsign() { // {{{
         $email1 = $this->input->post('email1', true);
         $email2 = $this->input->post('email2', true);
-        // email1 암호화 + efs_code 생성 + start & end
-        $email1 = $this->encryption->encrypt($email1);
-        $efs_code = $this->encryption->encrypt($email1);
-        $start_datetime = YMD_HIS;
-        $end_datetime = date('Y-m-d H:i:s', strtotime('+ '.$this->efs_hour.' hour'));
-        $result = $this->emailforsignbiz->check_emailforsign($email1, $email2, $efs_code, $start_datetime, $end_datetime);
-        if($result['result'] === 'ok') {
-            // 이메일 발송
-            $url = $this->efs_url."?efs_code=".urlencode($efs_code);
-            debug_log($url);
+        $this->load->helper('email');
+        if(valid_email($email1."@".$email2)) {
+            // email1 암호화 + efs_code 생성 + start & end
+            $email1 = $this->encryption->encrypt($email1);
+            $efs_code = $this->encryption->encrypt($email1);
+            $start_datetime = YMD_HIS;
+            $end_datetime = date('Y-m-d H:i:s', strtotime('+ '.$this->efs_hour.' hour'));
+            $result = $this->emailforsignbiz->check_emailforsign($email1, $email2, $efs_code, $start_datetime, $end_datetime);
+            if($result['result'] === 'ok') {
+                // 이메일 발송
+                $url = $this->efs_url."?efs_code=".urlencode($efs_code);
+                $result['url'] = $url;
+                //debug_log($url);
+            }
+        } else {
+            $result = array('result' => 'notemail', 'msg' => '이메일 주소를 다시 확인해 주세요');
         }
         echo json_encode($result);
     } // }}}

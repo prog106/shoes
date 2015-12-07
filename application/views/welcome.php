@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script src="/static/js/shoes.util.js"></script>
 </head>
 <body>
-
+<iframe width="500" height="315" src="https://www.youtube.com/embed/l5VQW8c1ax8" frameborder="0" allowfullscreen></iframe><br>
 <?
 if(!empty($member)) {
 ?>
@@ -20,7 +20,8 @@ if(!empty($member)) {
 <?
 } else {
 ?>
-<a href="/welcome/sign">회원가입</a> | <a href="/welcome/login">로그인</a>
+<a href="/welcome/sign">회원가입</a><br>
+<a href="/welcome/login">로그인</a>
 <?
 }
 ?>
