@@ -101,6 +101,25 @@ if(!function_exists('alertmsg_move')) {
     } // }}}
 }
 
+// 팝업창이면 팝업 닫고
+// 아니면 URL을 replace 하거나, back();
+if(!function_exists('close_reload')) {
+    function close_reload($url=''){ // {{{
+        echo "<html>";
+        echo "<head>";
+        echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
+        echo "</head>";
+        echo "<body>";
+        echo "<script>";
+        echo "opener.location.reload();";
+        echo "window.close();";
+        echo "</script>";
+        echo "</body>";
+        echo "</html>";
+        exit;
+    } // }}}
+}
+
 
 if(!function_exists('add_month')) {
     function add_month($ymd_his, $i) { // {{{

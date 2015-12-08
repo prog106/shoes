@@ -8,7 +8,7 @@
 <script>
 $(document).ready(function() {
     $('#efs_regist').click(function() {
-        var url = '/welcome/ax_set_emailforsign';
+        var url = '/sign/ax_set_emailforsign';
         var data = $('#efs_form').serialize();
         ax_post(url, data, function(ret) {
             if(ret.result == 'ok') {

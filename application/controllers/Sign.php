@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Sign extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -24,23 +24,12 @@ class Welcome extends CI_Controller {
         $this->load->helper('url');
         $this->load->model('biz/Emailforsignbiz', 'emailforsignbiz');
         $this->efs_hour = "2"; // 인증 가능 시간
-        $this->efs_url = "http://shoes.prog106.indoproc.xyz/welcome/auth/";
+        $this->efs_url = "http://shoes.prog106.indoproc.xyz/sign/auth/";
     }
-
-	public function index() { // {{{
-		//$this->load->view('welcome_message');
-        //$this->load->view('welcome_test');
-        /*$a = password_hash('123', PASSWORD_BCRYPT);
-        debug($a);
-        debug(password_verify('123', $a));*/
-        $data = array();
-        $data['member'] = $this->session->userdata('loginmember');
-        load_view('welcome', $data);
-    } // }}}
 
     // 회원가입 절차 1단계
     public function sign() { // {{{
-        load_view('sign');
+        load_view('sign/sign');
 	} // }}}
 
     // 회원가입 절차 2단계
@@ -60,23 +49,27 @@ class Welcome extends CI_Controller {
         $data['email2'] = $email2;
         $data['end'] = $step['end_datetime'];
         $data['efs_srl'] = $step['efs_srl'];
-        load_view('signform', $data);
+        load_view('sign/signform', $data);
     } // }}}
 
     // 로그인
     public function login() { // {{{
         $member = $this->session->userdata('loginmember');
         if(!empty($member)) redirect('/', 'refresh');
+        load_view('sign/login');
+    } // }}}
 
-        // FACEBOOK --- start
+    // kakao 회원가입 & 로그인
+    public function kakaologin() { // {{{
+        load_view('sign/kakao');
+    } // }}}
+
+    // facebook 회원가입 & 로그인
+    public function facebooklogin() { // {{{
+        $member = $this->session->userdata('loginmember');
+        if(!empty($member)) close_reload();
+
         $this->load->library('facebook'); // Automatically picks appId and secret from config
-        // OR
-        // You can pass different one like this
-        //$this->load->library('facebook', array(
-        //    'appId' => 'APP_ID',
-        //    'secret' => 'SECRET',
-        //    ));
-
         $user = $this->facebook->getUser();
         if ($user) {
             try {
@@ -85,25 +78,19 @@ class Welcome extends CI_Controller {
                 $user = null;
             }
         }else {
-            // Solves first time login issue. (Issue: #10)
-            //$this->facebook->destroySession();
         }
 
         if ($user) {
             self::save_login($data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name']);
-            redirect('/', 'refresh');
-
-            $data['logout_url'] = site_url('welcome/logout'); // Logs off application
-            // $data['logout_url'] = $this->facebook->getLogoutUrl();
-
+            close_reload();
+            $data['logout_url'] = site_url('sign/logout'); // Logs off application
         } else {
             $data['login_url'] = $this->facebook->getLoginUrl(array(
-                'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/welcome/login', 
+                'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/sign/facebooklogin', 
                 'scope' => array('user_birthday,public_profile,email'), // permissions here
             ));
+            redirect($data['login_url'], 'refresh');
         }
-        // FACEBOOK --- end
-        load_view('login', $data);
     } // }}}
 
     public function ax_set_emailforsign() { // {{{
@@ -127,6 +114,18 @@ class Welcome extends CI_Controller {
             $result = array('result' => 'notemail', 'msg' => '이메일 주소를 다시 확인해 주세요');
         }
         echo json_encode($result);
+    } // }}}
+
+    public function ax_set_kakao() { // {{{
+        $kakao_id = $this->input->post('id', true);
+        $kakao_nickname = $this->input->post('name', true);
+        if(!empty($kakao_id) && !empty($kakao_nickname)) {
+            self::save_login($kakao_id, '@kakao', $kakao_nickname);
+            echo json_encode(ok_result());
+            die;
+        }
+        echo json_encode(error_result());
+        die;
     } // }}}
 
     public function ax_set_sign() { // {{{

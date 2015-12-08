@@ -27,12 +27,12 @@ $(document).ready(function() {
             alert('비밀번호가 달라요');
             return false;
         }
-        var url = '/welcome/ax_set_sign';
+        var url = '/sign/ax_set_sign';
         var data = $('#sign_form').serialize();
         ax_post(url, data, function(ret) {
             if(ret.result == 'ok') {
                 alert('회원가입 완료');
-                window.location.href='/welcome/login';
+                window.location.href='/sign/login';
             } else {
                 alert(ret.msg);
             }
