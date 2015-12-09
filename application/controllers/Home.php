@@ -8,10 +8,15 @@ class Home extends CI_Controller {
     }
 
 	public function index() { // {{{
+        $member = $this->session->userdata('loginmember');
+        if(empty($this->input->cookie('nologin')) && empty($member)) {
+            redirect('/sign/login', 'refresh');
+            die;
+        }
         $this->load->model('biz/Questionbiz', 'questionbiz');
         $result = $this->questionbiz->get_question_list(1);
         $data = array();
-        $data['member'] = $this->session->userdata('loginmember');
+        $data['member'] = $member;
         $data['list'] = $result;
         load_view('home/index', $data);
     } // }}}

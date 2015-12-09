@@ -4,14 +4,17 @@
     <button type="button" id="login">로그인</button>
     </form -->
 
-    <a href="javascript:;" onclick="facebooklogin()" class="btn btn-lg btn-primary btn-block" role="button">Facebook Login</a><br>
-    <a href="javascript:;" onclick="loginWithKakao()" class="btn btn-lg btn-warning btn-block" role="button" id="custom-login-btn">Kakao Login</a>
+    <a href="javascript:;" onclick="facebooklogin()" class="btn btn-lg btn-primary btn-block" role="button">Facebook Login</a>
+    <br>
+    <a href="javascript:;" onclick="kakaologin()" class="btn btn-lg btn-warning btn-block" role="button" id="custom-login-btn">Kakao Login</a>
+    <br>
+    <a href="javascript:;" class="btn btn-lg btn-success btn-block" role="button" id="nologin">둘러보기</a>
 
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script>
 // 사용할 앱의 JavaScript 키를 설정해 주세요.
 Kakao.init('6c745ff7fa2422e6fe5ba3411fa5efcb');
-function loginWithKakao() {
+function kakaologin() {
 // 로그인 창을 띄웁니다.
     Kakao.Auth.login({
         success: function(authObj) {
@@ -37,6 +40,13 @@ function loginWithKakao() {
     });
 }
 $(document).ready(function() {
+    $('#nologin').click(function() {
+        var url = '/sign/ax_set_nologin';
+        var data = [];
+        ax_post(url, data, function(ret) {
+            window.location.href='/';
+        });
+    });
     $('#login').click(function() {
         var email = $('#email').val();
         var pwd = $('#pwd').val();

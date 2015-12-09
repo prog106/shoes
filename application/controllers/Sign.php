@@ -81,8 +81,12 @@ class Sign extends CI_Controller {
         }
 
         if ($user) {
+            // 회원가입 시킨다. facebook id 만 저장
+            $this->load->model('biz/Signbiz', 'signbiz');
+            $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name']);
             self::save_login($data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name']);
             close_reload();
+            die;
             $data['logout_url'] = site_url('sign/logout'); // Logs off application
         } else {
             $data['login_url'] = $this->facebook->getLoginUrl(array(
@@ -93,6 +97,7 @@ class Sign extends CI_Controller {
         }
     } // }}}
 
+    // 이메일 회원가입 efs
     public function ax_set_emailforsign() { // {{{
         $email1 = $this->input->post('email1', true);
         $email2 = $this->input->post('email2', true);
@@ -116,6 +121,7 @@ class Sign extends CI_Controller {
         echo json_encode($result);
     } // }}}
 
+    // 카카오 로그인
     public function ax_set_kakao() { // {{{
         $kakao_id = $this->input->post('id', true);
         $kakao_nickname = $this->input->post('name', true);
@@ -128,6 +134,7 @@ class Sign extends CI_Controller {
         die;
     } // }}}
 
+    // 회원가입
     public function ax_set_sign() { // {{{
         $email1 = $this->input->post('email1', true);
         $email2 = $this->input->post('email2', true);
@@ -149,10 +156,11 @@ class Sign extends CI_Controller {
         $pwd = password_hash($pwd, PASSWORD_BCRYPT); // 비밀번호 암호화
 
         $this->load->model('biz/Signbiz', 'signbiz');
-        $result = $this->signbiz->sign_member($efs_srl, $email1, $email2, $pwd, $name, $email);
+        $result = $this->signbiz->sign_member('efs', $efs_srl, $email1, $email2, $pwd, $name, $email);
         echo json_encode($result);
     } // }}}
 
+    // 로그인
     public function ax_get_login() { // {{{
         $email = $this->input->post('email', true);
         $pwd = $this->input->post('pwd', true);
@@ -189,6 +197,7 @@ class Sign extends CI_Controller {
 
     } // }}}
 
+    // 로그아웃
     public function ax_get_logout() { // {{{
         $this->load->library('facebook');
         $this->facebook->destroySession();
@@ -198,6 +207,18 @@ class Sign extends CI_Controller {
         echo json_encode(ok_result());
     } // }}}
 
+    // no login
+    public function ax_set_nologin() { // {{{
+        $cookie = array(
+            'name' => 'nologin',
+            'value' => 'true',
+            'expire' => '0',
+        );
+        $this->input->set_cookie($cookie);
+        echo json_encode(ok_result());
+    } // }}}
+
+    // 로그인 세션 저장
     private function save_login($srl, $email, $name) { // {{{
         // 로그인 성공
         $loginmember = array(

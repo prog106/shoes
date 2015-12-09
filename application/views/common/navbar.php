@@ -2,13 +2,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" style="float:left;margin-left:10px;">
+                <span class="sr-only"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">응답하라</a>
+            <a class="navbar-brand" href="/" style="color:#FFFFFF">Today's Question</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -19,21 +19,11 @@
 if(!empty($member)) {
 ?>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?=$member['mem_name']?>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:;" id="logout">로그아웃</a></li>
-                        <!-- li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li -->
-                    </ul>
+                    <a href="javascript:;">어서오세요! <?=$member['mem_name']?> 님</a>
                 </li>
+                <li><a href="/question">내가 올린 질문</a></li>
                 <li><a href="/question">응답하라 오빠!</a></li>
+                <li><a href="javascript:;" id="logout">로그아웃</a></li>
 <?
 } else {
 ?>

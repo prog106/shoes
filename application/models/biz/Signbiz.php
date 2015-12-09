@@ -9,13 +9,18 @@ class Signbiz extends CI_Model {
         $this->load->model('dao/Signdao', 'signdao');
     }
 
+    public function sns_member($mem_type, $efs_srl, $email, $name) { // {{{
+        $result = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
+        return ok_result();
+    } // }}}
+
     // 회원 가입 처리
-    public function sign_member($efs_srl, $email1, $email2, $pwd, $name, $email) { // {{{
+    public function sign_member($mem_type, $efs_srl, $email1, $email2, $pwd, $name, $email) { // {{{
         try {
             $this->db->trans_begin();
 
             // 회원 가입 저장
-            $result = self::save_member($efs_srl, $email1, $email2, $pwd, $name, $email);
+            $result = self::save_member($mem_type, $efs_srl, $email1, $email2, $pwd, $name, $email);
             if($result['result'] === 'error') throw new Exception($result['msg']);
             $step = $result['data'];
             // efs 정보 갱신
@@ -38,9 +43,11 @@ class Signbiz extends CI_Model {
     } // }}}
 
     // 회원 가입 저장
-    public function save_member($efs_srl, $email1, $email2, $pwd, $name, $email) { // {{{
+    public function save_member($mem_type, $efs_srl, $email1, $email2, $pwd, $name, $email) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
+        if(!empty($mem_type)) $sql_param['mem_type'] = $mem_type;
+        else return $error_result;
         if(!empty($efs_srl)) $sql_param['efs_srl'] = $efs_srl;
         else return $error_result;
         if(!empty($email1)) $sql_param['mem_email1'] = $email1;
@@ -57,9 +64,11 @@ class Signbiz extends CI_Model {
         return ok_result($this->signdao->save_member($sql_param));
     } // }}}
 
+    // 로그인
     public function login_member($email1, $email2) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
+        $sql_param['mem_type'] = 'efs';
         if(!empty($email1)) $sql_param['mem_email1'] = $email1;
         else return $error_result;
         if(!empty($email2)) $sql_param['mem_email2'] = $email2;
