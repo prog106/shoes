@@ -17,11 +17,13 @@ class Questiondao extends CI_Model {
 
     // 질문 리스트
     public function get_question_list($sql_param, $paging, $limit) { // {{{
-        $this->db->select('*');
+        $this->db->select('Q.*, M.*');
+        $this->db->from('question Q');
+        $this->db->join('members M', 'M.mem_srl = Q.mem_srl');
         $this->db->where($sql_param);
         $this->db->order_by('que_srl', 'DESC');
         $this->db->limit($limit, $paging);
-        $result = $this->db->get('question');
+        $result = $this->db->get();
         return $result->result_array();
     } // }}}
 

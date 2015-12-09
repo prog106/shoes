@@ -21,9 +21,10 @@ class Questionbiz extends CI_Model {
         return ok_result($this->questiondao->save_question($sql_param));
     } // }}}
 
+    // 질문 가져오기
     public function get_question_list($page=1) { // {{{
         $sql_param = array();
-        $sql_param['status'] = 'use';
+        $sql_param['Q.status'] = 'use';
         $limit = 10;
         $paging = ($page-1)*$limit;
         return $this->questiondao->get_question_list($sql_param, $paging, $limit);

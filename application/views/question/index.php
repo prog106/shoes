@@ -1,7 +1,7 @@
 <form id="question_form">
     <div class="form-group">
         <label for="question">질문</label>
-        <textarea class="form-control" name="question" id="question" rows="2" maxlength="200" placeholder="궁금한게 있나요?"></textarea>
+        <textarea class="form-control" name="question" id="question" rows="3" maxlength="200" placeholder="궁금한게 있나요?"></textarea>
     </div>
     <button type="button" id="regist" class="btn btn-default">응답해라</button>
 </form>
@@ -25,7 +25,6 @@ $(document).ready(function(){
             }
         });
     });
-    $('#question').enterTrigger('#regist');
 
     $(window).on('scroll', function () {
         if (scrollOK) {

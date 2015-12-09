@@ -59,44 +59,6 @@ class Sign extends CI_Controller {
         load_view('sign/login');
     } // }}}
 
-    // kakao 회원가입 & 로그인
-    public function kakaologin() { // {{{
-        load_view('sign/kakao');
-    } // }}}
-
-    // facebook 회원가입 & 로그인
-    public function facebooklogin() { // {{{
-        $member = $this->session->userdata('loginmember');
-        if(!empty($member)) close_reload();
-
-        $this->load->library('facebook'); // Automatically picks appId and secret from config
-        $user = $this->facebook->getUser();
-        if ($user) {
-            try {
-                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,birthday,gender');
-            } catch (FacebookApiException $e) {
-                $user = null;
-            }
-        }else {
-        }
-
-        if ($user) {
-            // 회원가입 시킨다. facebook id 만 저장
-            $this->load->model('biz/Signbiz', 'signbiz');
-            $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name']);
-            self::save_login($data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name']);
-            close_reload();
-            die;
-            $data['logout_url'] = site_url('sign/logout'); // Logs off application
-        } else {
-            $data['login_url'] = $this->facebook->getLoginUrl(array(
-                'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/sign/facebooklogin', 
-                'scope' => array('user_birthday,public_profile,email'), // permissions here
-            ));
-            redirect($data['login_url'], 'refresh');
-        }
-    } // }}}
-
     // 이메일 회원가입 efs
     public function ax_set_emailforsign() { // {{{
         $email1 = $this->input->post('email1', true);
@@ -121,13 +83,58 @@ class Sign extends CI_Controller {
         echo json_encode($result);
     } // }}}
 
-    // 카카오 로그인
+    // facebook 회원가입 & 로그인
+    public function facebooklogin() { // {{{
+        $member = $this->session->userdata('loginmember');
+        if(!empty($member)) close_reload();
+
+        $this->load->library('facebook'); // Automatically picks appId and secret from config
+        $user = $this->facebook->getUser();
+        if ($user) {
+            try {
+                $data['user_profile'] = $this->facebook->api('/me?fields=name,email');
+            } catch (FacebookApiException $e) {
+                $user = null;
+            }
+        }else {
+        }
+
+        if ($user) {
+            // 회원가입 시킨다. facebook id, email 
+            $this->load->model('biz/Signbiz', 'signbiz');
+            $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name']);
+            if(!empty($mem) && $mem['result'] == 'ok') {
+                self::save_login($mem_srl, $data['user_profile']['email'], $data['user_profile']['name']);
+                close_reload();
+            } else {
+                alertmsg_move('로그인을 실패하였습니다.');
+            }
+            die;
+            $data['logout_url'] = site_url('sign/logout'); // Logs off application
+        } else {
+            $data['login_url'] = $this->facebook->getLoginUrl(array(
+                'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/sign/facebooklogin', 
+                'scope' => array('user_birthday,public_profile,email'), // permissions here
+            ));
+            redirect($data['login_url'], 'refresh');
+        }
+    } // }}}
+
+    // 카카오 회원가입 & 로그인
     public function ax_set_kakao() { // {{{
         $kakao_id = $this->input->post('id', true);
         $kakao_nickname = $this->input->post('name', true);
         if(!empty($kakao_id) && !empty($kakao_nickname)) {
-            self::save_login($kakao_id, '@kakao', $kakao_nickname);
-            echo json_encode(ok_result());
+            // 회원가입 시킨다. kakao id, name
+            $this->load->model('biz/Signbiz', 'signbiz');
+            $mem = $this->signbiz->sns_member('kakao', $kakao_id, $this->encryption->encrypt($kakao_id."@kakao"), $kakao_nickname);
+            if(!empty($mem) && $mem['result'] == 'ok') {
+                $mem_srl = $mem['data'];
+                self::save_login($mem_srl, $kakao_id.'@kakao', $kakao_nickname);
+                echo json_encode(ok_result());
+            } else {
+                alertmsg_move('로그인을 실패하였습니다.');
+            }
             die;
         }
         echo json_encode(error_result());

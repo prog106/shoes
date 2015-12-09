@@ -9,9 +9,27 @@ class Signbiz extends CI_Model {
         $this->load->model('dao/Signdao', 'signdao');
     }
 
+    // sns 회원가입
     public function sns_member($mem_type, $efs_srl, $email, $name) { // {{{
-        $result = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
-        return ok_result();
+        $sns_prm = array();
+        $sns_prm = array(
+            'mem_type' => $mem_type,
+            'efs_srl' => $efs_srl,
+        );
+        $mem = $this->signdao->sns_login_member($sns_prm);
+        if(!empty($mem)) {
+            if($mem['mem_name'] != $name) {
+                $name_prm = array(
+                    'mem_name' => $name,
+                );
+                $this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
+            }
+            $mem_srl = $mem['mem_srl'];
+            $result = ok_result($mem_srl);
+        } else {
+            $result = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
+        }
+        return $result;
     } // }}}
 
     // 회원 가입 처리
