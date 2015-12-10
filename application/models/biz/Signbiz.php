@@ -24,11 +24,14 @@ class Signbiz extends CI_Model {
                 );
                 $this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
             }
-            $mem_srl = $mem['mem_srl'];
-            $result = ok_result($mem_srl);
+            $mem_info['mem_srl'] = $mem['mem_srl'];
+            $mem_info['level'] = $mem['status'];
         } else {
-            $result = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
+            $mem_srl = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
+            $mem_info['mem_srl'] = $mem_srl;
+            $mem_info['level'] = 'normal';
         }
+        $result = ok_result($mem_info);
         return $result;
     } // }}}
 

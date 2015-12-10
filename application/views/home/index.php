@@ -17,7 +17,7 @@ foreach($list as $k => $v) {
                     <span style="font-size:11px;line-height:25px;"><?=$v['mem_name']?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$v['create_at']?></span>
                     <h4 class="media-heading"><pre><?=$v['question']?></pre></h4>
-                    <span style="font-size:11px;">응답 10000 좋아요 5000</span><br>
+                    <span style="font-size:11px;">응답 <?=number_format($v['respond'])?> 좋아요 <?=number_format($v['like'])?></span><br>
                 </div>
             </div>
             <button type="button" class="btn btn-primary" style="width:95%;margin:10px 15px 0px 15px;">응답하기</button>

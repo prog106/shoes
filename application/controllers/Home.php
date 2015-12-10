@@ -14,7 +14,7 @@ class Home extends CI_Controller {
             die;
         }
         $this->load->model('biz/Questionbiz', 'questionbiz');
-        $result = $this->questionbiz->get_question_list(1);
+        $result = $this->questionbiz->get_main_question_list(1);
         $data = array();
         $data['member'] = $member;
         $data['list'] = $result;

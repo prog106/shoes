@@ -44,7 +44,7 @@ class Signdao extends CI_Model {
     } // }}}
 
     // sns 회원 정보 업데이트
-    public function sns_update_member($sql_param, $mem_srl) { // }}}
+    public function sns_update_member($sql_param, $mem_srl) { // {{{
         $where = "mem_srl = '".$mem_srl."'";
         $str = $this->db->update_string('members', $sql_param, $where);
         $result = $this->db->query($str);
