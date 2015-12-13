@@ -38,4 +38,28 @@ class Questiondao extends CI_Model {
         return $result->result_array();
     } // }}}
 
+    // 답변글 +1 업데이트
+    public function update_question_answer($que_srl) { // {{{
+        $this->db->set('respond', 'respond+1', false);
+        $this->db->where('que_srl', $que_srl);
+        $this->db->update('question');
+        return $this->db->affected_rows();
+    } // }}}
+
+    // 좋아요 +1 업데이트
+    public function update_question_like($que_srl) { // {{{
+        $this->db->set('like', 'like+1', false);
+        $this->db->where('que_srl', $que_srl);
+        $this->db->update('question');
+        return $this->db->affected_rows();
+    } // }}}
+
+    // 질문 가져오기
+    public function get_question($que_srl) { // {{{
+        $this->db->where('que_srl', $que_srl);
+        $this->db->where('status', 'use');
+        $result = $this->db->get('question');
+        return $result->row_array();
+    } // }}}
+
 }

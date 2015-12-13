@@ -20,7 +20,7 @@ foreach($list as $k => $v) {
                     <span style="font-size:11px;">응답 <?=number_format($v['respond'])?> 좋아요 <?=number_format($v['like'])?></span><br>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" style="width:95%;margin:10px 15px 0px 15px;">응답하기</button>
+            <a href="/answer/index/<?=$v['que_srl']?>" class="btn btn-primary" style="width:95%;margin:10px 15px 0px 15px;">응답하기</a>
             <hr>
 <?
 }

@@ -43,4 +43,9 @@ class Questionbiz extends CI_Model {
         return $this->questiondao->get_main_question_list($sql_param);
     } // }}}
 
+    // 질문 가져오기
+    public function get_question($que_srl) { // {{{
+        if(empty($que_srl)) return error_result();
+        return $this->questiondao->get_question($que_srl);
+    } // }}}
 }
