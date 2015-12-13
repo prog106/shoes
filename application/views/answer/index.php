@@ -4,7 +4,7 @@
 <input type="hidden" name="question" id="question" value="<?=$question['que_srl']?>">
     <div class="form-group">
         <label for="answer">답글</label>
-        <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="답변을 해주세요!"></textarea>
+        <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="<?=(empty($member))?"로그인 후 이용해 주세요.":"답변을 해주세요!"?>"<?=(empty($member))?" READONLY":""?>></textarea>
     </div>
     <button type="button" id="regist" class="btn btn-default">응답했다!</button>
 </form>

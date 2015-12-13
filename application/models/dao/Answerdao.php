@@ -21,7 +21,7 @@ class Answerdao extends CI_Model {
         $this->db->from('answer A');
         $this->db->join('members M', 'M.mem_srl = A.mem_srl');
         $this->db->where($sql_param);
-        $this->db->order_by('A.que_srl', 'DESC');
+        $this->db->order_by('A.ans_srl', 'DESC');
         $this->db->limit($limit, $paging);
         $result = $this->db->get();
         return $result->result_array();

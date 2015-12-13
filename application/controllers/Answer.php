@@ -10,16 +10,14 @@ class Answer extends CI_Controller {
 
     private function manager($member) { // {{{
         if(empty($member)) {
-            alertmsg_move('로그인 후 이용해 주세요', '/');
+            echo json_encode(error_result('로그인 후 이용해 주세요'));
             die;
         }
     } // }}}
 
     // 질문 리스트 & 답글 올리기 폼
-    public function index($que_srl) { // {{{
+    public function view($que_srl) { // {{{
         $member = $this->session->userdata('loginmember');
-        self::manager($member);
-
         if(empty($que_srl)) {
             alertmsg_move('질문이 없습니다.');
             die;
