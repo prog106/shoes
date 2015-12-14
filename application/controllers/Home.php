@@ -15,9 +15,22 @@ class Home extends CI_Controller {
         }
         $this->load->model('biz/Questionbiz', 'questionbiz');
         $result = $this->questionbiz->get_main_question_list(1);
+        $like = array();
+        if(!empty($member)) {
+            $que_srls = array();
+            foreach($result as $k => $v) {
+                $que_srls[] = $v['que_srl'];
+            }
+            $this->load->model('biz/Likebiz', 'likebiz');
+            $likes = $this->likebiz->get_like_info($member['mem_srl'], $que_srls);
+            foreach($likes as $k => $v) {
+                $like[$v['que_srl']] = $v['like_srl'];
+            }
+        }
         $data = array();
         $data['member'] = $member;
         $data['list'] = $result;
+        $data['like'] = $like;
         load_view('home/index', $data);
     } // }}}
 
