@@ -16,12 +16,19 @@ class Answerdao extends CI_Model {
     } // }}}
 
     // 답글 리스트
-    public function get_answer_list($sql_param, $paging, $limit) { // {{{
-        $this->db->select('A.*, M.*');
+    public function get_answer_list($sql_param, $paging, $limit, $mem_srl) { // {{{
+        if(!empty($mem_srl)) {
+            $this->db->select('A.*, M.*, LA.ans_srl AS la_srl');
+        } else {
+            $this->db->select('A.*, M.*');
+        }
         $this->db->from('answer A');
         $this->db->join('members M', 'M.mem_srl = A.mem_srl');
+        if(!empty($mem_srl)) {
+            $this->db->join('likes_answer LA', 'A.ans_srl = LA.ans_srl AND LA.likes = \'like\' AND LA.mem_srl = '.$mem_srl, 'left');
+        }
         $this->db->where($sql_param);
-        $this->db->order_by('A.ans_srl', 'DESC');
+        $this->db->order_by('A.likes DESC, A.ans_srl ASC');
         $this->db->limit($limit, $paging);
         $result = $this->db->get();
         return $result->result_array();

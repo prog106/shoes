@@ -31,7 +31,16 @@ class Answer extends CI_Controller {
             alertmsg_move('질문이 없습니다.');
             die;
         }
+        $like = array();
+        if(!empty($member)) {
+            $this->load->model('biz/Likebiz', 'likebiz');
+            $likes = $this->likebiz->get_like_info($member['mem_srl'], array($que_srl));
+            foreach($likes as $k => $v) {
+                $like[$v['que_srl']] = $v['like_srl'];
+            }
+        }
         $data['question'] = $question;
+        $data['like'] = $like;
         load_view('answer/index', $data);
     } // }}}
 
@@ -56,9 +65,12 @@ class Answer extends CI_Controller {
 
     // 답글 가져오기
     public function ax_get_answer() { // {{{
+        $member = $this->session->userdata('loginmember');
+        $mem_srl = null;
+        if(!empty($member)) $mem_srl = $member['mem_srl'];
         $que_srl = $this->input->post('question', true);
         $page = $this->input->post('page', true);
-        $result = $this->answerbiz->get_answer_list($page, $que_srl);
+        $result = $this->answerbiz->get_answer_list($page, $que_srl, $mem_srl);
         $list = array(
             'recordsTotal' => count($result),
             'data' => $result,

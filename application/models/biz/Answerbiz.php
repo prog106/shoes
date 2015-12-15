@@ -52,15 +52,15 @@ class Answerbiz extends CI_Model {
     } // }}}
 
     // 답글 가져오기
-    public function get_answer_list($page=1, $que_srl) { // {{{
+    public function get_answer_list($page=1, $que_srl, $mem_srl=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(!empty($que_srl)) $sql_param['A.que_srl'] = $que_srl;
         else return $error_result;
         $sql_param['A.status'] = 'use';
-        $limit = 10;
+        $limit = 20;
         $paging = ($page-1)*$limit;
-        return $this->answerdao->get_answer_list($sql_param, $paging, $limit);
+        return $this->answerdao->get_answer_list($sql_param, $paging, $limit, $mem_srl);
     } // }}}
 
 }

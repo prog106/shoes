@@ -84,4 +84,40 @@ class Like extends CI_Controller {
         echo json_encode($list);
     } // }}}
 
+    // 답글 좋아요
+    public function ax_set_answer_like() { // {{{
+        $member = $this->session->userdata('loginmember');
+        self::manager($member);
+
+        $ans_srl = $this->input->post('answer', true);
+        if(empty($ans_srl)) {
+            echo json_encode(error_result());
+            die;
+        }
+        $result = $this->likebiz->answerlike($member['mem_srl'], $ans_srl);
+        if($result['result'] == 'ok') {
+            if($result['data'] === 'already') $ans_srl = 'already';
+            echo json_encode(ok_result($ans_srl));
+            die;
+        }
+        echo json_encode(error_result());
+    } // }}}
+
+    // 답글 좋아요 취소
+    public function ax_set_answer_dontlike() { // {{{
+        $member = $this->session->userdata('loginmember');
+        self::manager($member);
+
+        $ans_srl = $this->input->post('answer', true);
+        if(empty($ans_srl)) {
+            echo json_encode(error_result());
+            die;
+        }
+        $result = $this->likebiz->answerdontlike($member['mem_srl'], $ans_srl);
+        if($result['result'] == 'ok') {
+            echo json_encode(ok_result($ans_srl));
+            die;
+        }
+        echo json_encode(error_result());
+    } // }}}
 }

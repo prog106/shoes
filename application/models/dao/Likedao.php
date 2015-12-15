@@ -36,4 +36,27 @@ class Likedao extends CI_Model {
         return $result->result_array();
     } // }}}
 
+
+    // 댓글
+    public function get_answerlike($sql_param) { // {{{
+        $this->db->where($sql_param);
+        $result = $this->db->get('likes_answer');
+        return $result->row_array();
+    } // }}}
+
+    // 댓글 좋아요
+    public function save_answerlike($sql_param) { // {{{
+        $this->db->set($sql_param);
+        $this->db->insert('likes_answer');
+        return $this->db->insert_id();
+    } // }}}
+
+    // 댓글 좋아요 갱신
+    public function update_answerlike($sql_param, $like_ans_srl) { // {{{
+        $this->db->set($sql_param);
+        $this->db->where('like_ans_srl', $like_ans_srl);
+        $this->db->update('likes_answer');
+        return $this->db->affected_rows();
+    } // }}}
+
 }

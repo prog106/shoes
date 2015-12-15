@@ -70,4 +70,20 @@ class Questiondao extends CI_Model {
         return $result->row_array();
     } // }}}
 
+    // 댓글 좋아요 +1 업데이트
+    public function update_question_answerlike($ans_srl) { // {{{
+        $this->db->set('likes', 'likes+1', false);
+        $this->db->where('ans_srl', $ans_srl);
+        $this->db->update('answer');
+        return $this->db->affected_rows();
+    } // }}}
+
+    // 댓글 좋아요 -1 업데이트
+    public function update_question_answerdontlike($ans_srl) { // {{{
+        $this->db->set('likes', 'likes-1', false);
+        $this->db->where('ans_srl', $ans_srl);
+        $this->db->update('answer');
+        return $this->db->affected_rows();
+    } // }}}
+
 }
