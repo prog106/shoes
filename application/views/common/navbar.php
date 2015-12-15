@@ -28,7 +28,7 @@ if(!empty($member)) {
 <?
     }
 ?>
-                <li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li>
+                <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
                 <li><a href="javascript:;" id="logout">로그아웃</a></li>
 <?
 } else {

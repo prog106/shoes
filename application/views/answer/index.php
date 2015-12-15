@@ -121,6 +121,7 @@ $(document).ready(function(){
                 var html = '';
                 for(var i = 0 ; i < len ; i++){
                     var data = d.data[i];
+                    console.log(data);
                     var like_color = 'gray';
                     var st = 'like';
                     if(data.la_srl) {
@@ -128,7 +129,16 @@ $(document).ready(function(){
                         st = 'dontlike';
                     }
                     html += '<li class="list-group-item">';
-                    html += '<span style="font-size:11px"> [ '+data.create_at+' ] '+data.mem_name+'</span> ';
+<?
+if(!empty($member)) {
+?>
+                    if(data.mem_srl == '<?=$member['mem_srl']?>') {
+                        html += '<a href="javascript:;" class="delthis" id="delthis'+data.ans_srl+'" data-ans="'+data.ans_srl+'"><span class="glyphicon glyphicon-trash" style="font-size:12px;color:deeppink;"></span></a>';
+                    }
+<?
+}
+?>
+                    html += ' <span style="font-size:11px"> [ '+data.create_at+' ] '+data.mem_name+'</span> ';
                     html += ' <span style="color:darkorange;font-size:11px"> 좋아요 <span style="font-size:11px" id="likecount'+data.ans_srl+'">'+data.likes+'</span></span>';
                     html += '<a href="javascript:;" class="likeans" style="float:right;" id="likethis'+data.ans_srl+'" data-ans="'+data.ans_srl+'" data-status="'+st+'"><span class="glyphicon glyphicon-heart" id="like'+data.ans_srl+'" style="font-size:15px;color:'+like_color+';"></span></a><br>';
                     //html += data.ans_srl;
@@ -137,6 +147,22 @@ $(document).ready(function(){
                 }
                 $('#answer_list').append(html);
             }
+            $('.delthis').click(function() {
+                alert('준비중');
+                return false;
+                if(confirm('댓글을 삭제하시겠어요?')) {
+                    var ans = $(this).data('ans');
+                    var url = '/like/ax_set_answer_del';
+                    var data = {answer:ans}
+                    ax_post(url, data, function(ret) {
+                        if(ret.result == 'ok') {
+                            $('#delthis'+ans).parent('li').remove();
+                        } else {
+                            alert(ret.msg);
+                        }
+                    });
+                }
+            });
             $('.likeans').click(function() {
                 var sts = $(this).data('status');
                 var ans = $(this).data('ans');

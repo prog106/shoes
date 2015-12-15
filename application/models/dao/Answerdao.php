@@ -18,9 +18,9 @@ class Answerdao extends CI_Model {
     // 답글 리스트
     public function get_answer_list($sql_param, $paging, $limit, $mem_srl) { // {{{
         if(!empty($mem_srl)) {
-            $this->db->select('A.*, M.*, LA.ans_srl AS la_srl');
+            $this->db->select('A.*, M.mem_name, LA.ans_srl AS la_srl');
         } else {
-            $this->db->select('A.*, M.*');
+            $this->db->select('A.*, M.mem_name');
         }
         $this->db->from('answer A');
         $this->db->join('members M', 'M.mem_srl = A.mem_srl');
