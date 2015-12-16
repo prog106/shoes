@@ -1,4 +1,4 @@
-<form id="question_form">
+<form id="question_form" onsubmit="return false;">
     <div class="form-group">
         <label for="question">질문</label>
         <textarea class="form-control" name="question" id="question" rows="3" maxlength="200" placeholder="궁금한게 있나요?"></textarea>

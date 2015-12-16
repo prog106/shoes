@@ -16,7 +16,7 @@ class Home extends CI_Controller {
         $this->load->model('biz/Questionbiz', 'questionbiz');
         $result = $this->questionbiz->get_main_question_list(1);
         $like = array();
-        if(!empty($member)) {
+        if(!empty($member) && $member['mem_srl'] > 0) {
             $que_srls = array();
             foreach($result as $k => $v) {
                 $que_srls[] = $v['que_srl'];

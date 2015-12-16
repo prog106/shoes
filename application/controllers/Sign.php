@@ -103,7 +103,7 @@ class Sign extends CI_Controller {
             // 회원가입 시킨다. facebook id, email 
             $this->load->model('biz/Signbiz', 'signbiz');
             $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name']);
-            if(!empty($mem) && $mem['result'] == 'ok') {
+            if(!empty($mem) && $mem['result'] === 'ok') {
                 $mem_srl = $mem['data']['mem_srl'];
                 $level = $mem['data']['level'];
                 self::save_login($mem_srl, $data['user_profile']['email'], $data['user_profile']['name'], $level);
@@ -130,7 +130,7 @@ class Sign extends CI_Controller {
             // 회원가입 시킨다. kakao id, name
             $this->load->model('biz/Signbiz', 'signbiz');
             $mem = $this->signbiz->sns_member('kakao', $kakao_id, $this->encryption->encrypt($kakao_id."@kakao"), $kakao_nickname);
-            if(!empty($mem) && $mem['result'] == 'ok') {
+            if(!empty($mem) && $mem['result'] === 'ok') {
                 $mem_srl = $mem['data']['mem_srl'];
                 $level = $mem['data']['level'];
                 self::save_login($mem_srl, $kakao_id.'@kakao', $kakao_nickname, $level);
@@ -207,6 +207,16 @@ class Sign extends CI_Controller {
 
     } // }}}
 
+    // 일반 로그아웃
+    public function logout() { // {{{
+        $this->load->library('facebook');
+        $this->facebook->destroySession();
+        if(!empty($this->session->userdata('loginmember'))) {
+            $this->session->unset_userdata('loginmember');
+        }
+        redirect('/', 'refresh');
+    } // }}}
+
     // 로그아웃
     public function ax_get_logout() { // {{{
         $this->load->library('facebook');
@@ -230,13 +240,15 @@ class Sign extends CI_Controller {
 
     // 로그인 세션 저장
     private function save_login($srl, $email, $name, $level) { // {{{
-        // 로그인 성공
-        $loginmember = array(
-            'mem_srl' => $srl,
-            'mem_email' => $email,
-            'mem_name' => $name,
-            'level' => $level,
-        );
-        $this->session->set_userdata('loginmember', $loginmember);
+        if($srl > 0) {
+            // 로그인 성공
+            $loginmember = array(
+                'mem_srl' => $srl,
+                'mem_email' => $email,
+                'mem_name' => $name,
+                'level' => $level,
+            );
+            $this->session->set_userdata('loginmember', $loginmember);
+        }
     } // }}}
 }

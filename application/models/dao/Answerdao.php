@@ -42,4 +42,18 @@ class Answerdao extends CI_Model {
         return $this->db->affected_rows();
     } // }}}
 
+    // 답글 업데이트 - 삭제
+    public function update_answer_info($sql_param, $ans_srl) { // {{{
+        $this->db->set($sql_param);
+        $this->db->where('ans_srl', $ans_srl);
+        $this->db->update('answer');
+        return $this->db->affected_rows();
+    } // }}}
+
+    // 답글 가져오기
+    public function get_answer_info($sql_param) { // {{{
+        $this->db->where($sql_param);
+        $result = $this->db->get('answer');
+        return $result->row_array();
+    } // }}}
 }

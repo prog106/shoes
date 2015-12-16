@@ -46,6 +46,14 @@ class Questiondao extends CI_Model {
         return $this->db->affected_rows();
     } // }}}
 
+    // 답변글 -1 업데이트
+    public function update_question_answer_del($que_srl) { // {{{
+        $this->db->set('respond', 'respond-1', false);
+        $this->db->where('que_srl', $que_srl);
+        $this->db->update('question');
+        return $this->db->affected_rows();
+    } // }}}
+
     // 좋아요 +1 업데이트
     public function update_question_like($que_srl) { // {{{
         $this->db->set('likes', 'likes+1', false);

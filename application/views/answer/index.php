@@ -22,7 +22,7 @@ if($question['mem_level'] !== 'manager') {
 }
 ?>
                     <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
-                    <span style="font-size:11px;">응답 <?=number_format($question['respond'])?> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>
+                    <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>
                     <a href="javascript:;" class="likethis" id="likethis<?=$question['que_srl']?>" data-question="<?=$question['que_srl']?>" data-status="<?=(empty($like[$question['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-heart" id="like<?=$question['que_srl']?>" style="font-size:20px;color:<?=(empty($like[$question['que_srl']]))?"gray":"darkorange"?>;"></span></a>
                     <a href="javascript:;" id="answer_area_view" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-comment" style="font-size:20px;color:mediumorchid;"></span></a>
                 </div>
@@ -31,7 +31,7 @@ if($question['mem_level'] !== 'manager') {
         </div>
     </div>
     <div id="answer_area" style="display:none;">
-        <form id="answer_form">
+        <form id="answer_form" onsubmit="return false;">
         <input type="hidden" name="question" id="question" value="<?=$question['que_srl']?>">
             <div class="form-group">
                 <label for="answer">응답</label>
@@ -121,7 +121,6 @@ $(document).ready(function(){
                 var html = '';
                 for(var i = 0 ; i < len ; i++){
                     var data = d.data[i];
-                    console.log(data);
                     var like_color = 'gray';
                     var st = 'like';
                     if(data.la_srl) {
@@ -129,15 +128,9 @@ $(document).ready(function(){
                         st = 'dontlike';
                     }
                     html += '<li class="list-group-item">';
-<?
-if(!empty($member)) {
-?>
-                    if(data.mem_srl == '<?=$member['mem_srl']?>') {
+                    if(data.me) {
                         html += '<a href="javascript:;" class="delthis" id="delthis'+data.ans_srl+'" data-ans="'+data.ans_srl+'"><span class="glyphicon glyphicon-trash" style="font-size:12px;color:deeppink;"></span></a>';
                     }
-<?
-}
-?>
                     html += ' <span style="font-size:11px"> [ '+data.create_at+' ] '+data.mem_name+'</span> ';
                     html += ' <span style="color:darkorange;font-size:11px"> 좋아요 <span style="font-size:11px" id="likecount'+data.ans_srl+'">'+data.likes+'</span></span>';
                     html += '<a href="javascript:;" class="likeans" style="float:right;" id="likethis'+data.ans_srl+'" data-ans="'+data.ans_srl+'" data-status="'+st+'"><span class="glyphicon glyphicon-heart" id="like'+data.ans_srl+'" style="font-size:15px;color:'+like_color+';"></span></a><br>';
@@ -148,15 +141,15 @@ if(!empty($member)) {
                 $('#answer_list').append(html);
             }
             $('.delthis').click(function() {
-                alert('준비중');
-                return false;
-                if(confirm('댓글을 삭제하시겠어요?')) {
+                if(confirm('댓글을 정말 삭제하시겠어요?')) {
                     var ans = $(this).data('ans');
-                    var url = '/like/ax_set_answer_del';
+                    var url = '/answer/ax_set_answer_delete';
                     var data = {answer:ans}
                     ax_post(url, data, function(ret) {
                         if(ret.result == 'ok') {
                             $('#delthis'+ans).parent('li').remove();
+                            $('#respond').text(parseInt($('#respond').text() - 1));
+                            alert('삭제되었습니다.');
                         } else {
                             alert(ret.msg);
                         }

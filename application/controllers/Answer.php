@@ -71,11 +71,34 @@ class Answer extends CI_Controller {
         $que_srl = $this->input->post('question', true);
         $page = $this->input->post('page', true);
         $result = $this->answerbiz->get_answer_list($page, $que_srl, $mem_srl);
+        if($mem_srl > 0) {
+            foreach($result as $k => $v) {
+                $result[$k]['me'] = ($v['mem_srl'] === $mem_srl)?true:false;
+            }
+        }
         $list = array(
             'recordsTotal' => count($result),
             'data' => $result,
         );
         echo json_encode($list);
+    } // }}}
+
+    // 답글 지우기
+    public function ax_set_answer_delete() { // {{{
+        $member = $this->session->userdata('loginmember');
+        self::manager($member);
+
+        $ans_srl = $this->input->post('answer', true);
+        if(empty($ans_srl)) {
+            echo json_encode(error_result());
+            die;
+        }
+        $result = $this->answerbiz->delete_answer($ans_srl, $member['mem_srl']);
+        if($result['result'] == 'ok') {
+            echo json_encode(ok_result());
+            die;
+        }
+        echo json_encode(error_result());
     } // }}}
 
 }
