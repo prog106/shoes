@@ -17,19 +17,30 @@ class Signbiz extends CI_Model {
             'efs_srl' => $efs_srl,
         );
         $mem = $this->signdao->sns_login_member($sns_prm);
+        $mem_info = array();
         if(!empty($mem)) {
             $name_prm = array();
-            if($mem['mem_name'] !== $name) $name_prm['mem_name'] = $name;
-            if($mem['mem_picture'] !== $picture) $name_prm['mem_picture'] = $picture;
+            $mem_info['mem_srl'] = $mem['mem_srl'];
+            $mem_info['level'] = $mem['status'];
+            $mem_info['mem_name'] = $mem['mem_name'];
+            $mem_info['mem_picture'] = $mem['mem_picture'];
+            if($mem['mem_name'] !== $name) {
+                $name_prm['mem_name'] = $name;
+                $mem_info['mem_name'] = $name;
+            }
+            if($mem['mem_picture'] !== $picture) {
+                $name_prm['mem_picture'] = $picture;
+                $mem_info['mem_picture'] = $picture;
+            }
             if(!empty($name_prm)) {
                 $this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
             }
-            $mem_info['mem_srl'] = $mem['mem_srl'];
-            $mem_info['level'] = $mem['status'];
         } else {
             $mem_srl = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email, $picture);
             $mem_info['mem_srl'] = $mem_srl;
             $mem_info['level'] = 'normal';
+            $mem_info['mem_name'] = $name;
+            $mem_info['mem_picture'] = $picture;
         }
         $result = ok_result($mem_info);
         return $result;
