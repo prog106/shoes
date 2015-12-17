@@ -6,7 +6,7 @@
 if($question['mem_level'] !== 'manager') {
 ?>
                     <a href="#">
-                        <img class="media-object" src="https://scontent.xx.fbcdn.net/hprofile-frc3/v/t1.0-1/c2.129.716.716/s160x160/1379218_655568767816835_1688760699_n.jpg?oh=a29e5a4d08056faa4889631cb9db3eba&oe=56D7F246" width="50">
+                        <img class="media-object" src="<?=(empty($question['mem_picture'])?"":$question['mem_picture'])?>" width="50">
                     </a>
 <?
 }
@@ -34,15 +34,16 @@ if($question['mem_level'] !== 'manager') {
         <form id="answer_form" onsubmit="return false;">
         <input type="hidden" name="question" id="question" value="<?=$question['que_srl']?>">
             <div class="form-group">
-                <label for="answer">응답</label>
+                <label for="answer">응답하라</label>
                 <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="<?=(empty($member))?"로그인 후 이용해 주세요.":"응답해 주세요!"?>"<?=(empty($member))?" READONLY":""?>></textarea>
             </div>
-            <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>응답했다!</button>
+            <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>응답한다!</button>
         </form>
         <br>
     </div>
     <ul class="list-group" data-role="listview" data-inset="true" id="answer_list">
     </ul>
+<button type="button" id="more" class="glyphicon glyphicon-chevron-down btn btn-default btn-sm" style="width:100%"> 더보기</button>
 <script type="text/javascript">
 var page_num = 1;
 var timer    = setInterval(function () { scrollOK = true; }, 100);
@@ -66,7 +67,10 @@ $(document).ready(function(){
         });
     });
 
-    $(window).on('scroll', function () {
+    $('#more').click(function() {
+        get_answer_list(page_num+1);
+    });
+/*    $(window).on('scroll', function () {
         if (scrollOK) {
             scrollOK = false;
             if ($(this).scrollTop() + $(this).height() >= ($(document).height() - 5)) {
@@ -74,7 +78,7 @@ $(document).ready(function(){
             }
         }
     });
-
+*/
     get_answer_list(1);
     function likes(que, already) {
         $('#like'+que).css('color', 'darkorange');
@@ -139,6 +143,8 @@ $(document).ready(function(){
                     html += '</li>';
                 }
                 $('#answer_list').append(html);
+            } else {
+                $('#more').hide();
             }
             $('.delthis').click(function() {
                 if(confirm('댓글을 정말 삭제하시겠어요?')) {

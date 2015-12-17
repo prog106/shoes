@@ -18,13 +18,11 @@ function kakaologin() {
 // 로그인 창을 띄웁니다.
     Kakao.Auth.login({
         success: function(authObj) {
-            //alert(JSON.stringify(authObj));
             Kakao.API.request({
                 url: '/v1/user/me',
                 success: function(res) {
-                    //alert(JSON.stringify(res));
                     var url = '/sign/ax_set_kakao';
-                    var data = {'id':res.id, 'name':res.properties.nickname};
+                    var data = {'id':res.id, 'name':res.properties.nickname, 'picture':res.properties.thumbnail_image};
                     ax_post(url, data, function(ret) {
                         if(ret.result == 'ok') window.location.href='/';
                     });

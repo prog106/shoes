@@ -92,7 +92,7 @@ class Sign extends CI_Controller {
         $user = $this->facebook->getUser();
         if ($user) {
             try {
-                $data['user_profile'] = $this->facebook->api('/me?fields=name,email');
+                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,picture');
             } catch (FacebookApiException $e) {
                 $user = null;
             }
@@ -100,13 +100,14 @@ class Sign extends CI_Controller {
         }
 
         if ($user) {
-            // 회원가입 시킨다. facebook id, email 
+            // 회원가입 시킨다. facebook id, email, picture 
             $this->load->model('biz/Signbiz', 'signbiz');
-            $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name']);
+            $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name'], $data['user_profile']['picture']['data']['url']);
             if(!empty($mem) && $mem['result'] === 'ok') {
                 $mem_srl = $mem['data']['mem_srl'];
                 $level = $mem['data']['level'];
-                self::save_login($mem_srl, $data['user_profile']['email'], $data['user_profile']['name'], $level);
+                $picture = $mem['data']['mem_picture'];
+                self::save_login($mem_srl, $data['user_profile']['email'], $data['user_profile']['name'], $level, $picture);
                 close_reload();
             } else {
                 alertmsg_move('로그인을 실패하였습니다.');
@@ -126,14 +127,16 @@ class Sign extends CI_Controller {
     public function ax_set_kakao() { // {{{
         $kakao_id = $this->input->post('id', true);
         $kakao_nickname = $this->input->post('name', true);
+        $kakao_picture = $this->input->post('picture', true);
         if(!empty($kakao_id) && !empty($kakao_nickname)) {
             // 회원가입 시킨다. kakao id, name
             $this->load->model('biz/Signbiz', 'signbiz');
-            $mem = $this->signbiz->sns_member('kakao', $kakao_id, $this->encryption->encrypt($kakao_id."@kakao"), $kakao_nickname);
+            $mem = $this->signbiz->sns_member('kakao', $kakao_id, $this->encryption->encrypt($kakao_id."@kakao"), $kakao_nickname, $kakao_picture);
             if(!empty($mem) && $mem['result'] === 'ok') {
                 $mem_srl = $mem['data']['mem_srl'];
                 $level = $mem['data']['level'];
-                self::save_login($mem_srl, $kakao_id.'@kakao', $kakao_nickname, $level);
+                $picture = $mem['data']['mem_picture'];
+                self::save_login($mem_srl, $kakao_id.'@kakao', $kakao_nickname, $level, $picture);
                 echo json_encode(ok_result());
             } else {
                 alertmsg_move('로그인을 실패하였습니다.');
@@ -239,13 +242,14 @@ class Sign extends CI_Controller {
     } // }}}
 
     // 로그인 세션 저장
-    private function save_login($srl, $email, $name, $level) { // {{{
+    private function save_login($srl, $email, $name, $level, $picture=null) { // {{{
         if($srl > 0) {
             // 로그인 성공
             $loginmember = array(
                 'mem_srl' => $srl,
                 'mem_email' => $email,
                 'mem_name' => $name,
+                'mem_picture' => $picture,
                 'level' => $level,
             );
             $this->session->set_userdata('loginmember', $loginmember);

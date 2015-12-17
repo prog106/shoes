@@ -17,5 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+    <script src="/static/js/moment.min.js"></script>
+    <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body role="document">

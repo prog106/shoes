@@ -10,7 +10,7 @@ class Signbiz extends CI_Model {
     }
 
     // sns 회원가입
-    public function sns_member($mem_type, $efs_srl, $email, $name) { // {{{
+    public function sns_member($mem_type, $efs_srl, $email, $name, $picture=null) { // {{{
         $sns_prm = array();
         $sns_prm = array(
             'mem_type' => $mem_type,
@@ -18,16 +18,16 @@ class Signbiz extends CI_Model {
         );
         $mem = $this->signdao->sns_login_member($sns_prm);
         if(!empty($mem)) {
-            if($mem['mem_name'] != $name) {
-                $name_prm = array(
-                    'mem_name' => $name,
-                );
+            $name_prm = array();
+            if($mem['mem_name'] !== $name) $name_prm['mem_name'] = $name;
+            if($mem['mem_picture'] !== $picture) $name_prm['mem_picture'] = $picture;
+            if(!empty($name_prm)) {
                 $this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
             }
             $mem_info['mem_srl'] = $mem['mem_srl'];
             $mem_info['level'] = $mem['status'];
         } else {
-            $mem_srl = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email);
+            $mem_srl = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email, $picture);
             $mem_info['mem_srl'] = $mem_srl;
             $mem_info['level'] = 'normal';
         }
@@ -64,7 +64,7 @@ class Signbiz extends CI_Model {
     } // }}}
 
     // 회원 가입 저장
-    public function save_member($mem_type, $efs_srl, $email1, $email2, $pwd, $name, $email) { // {{{
+    public function save_member($mem_type, $efs_srl, $email1, $email2, $pwd, $name, $email, $picture=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(!empty($mem_type)) $sql_param['mem_type'] = $mem_type;
@@ -81,6 +81,7 @@ class Signbiz extends CI_Model {
         else return $error_result;
         if(!empty($email)) $sql_param['mem_email'] = $email;
         else return $error_result;
+        if(!empty($picture)) $sql_param['mem_picture'] = $picture;
         $sql_param['create_datetime'] = YMD_HIS;
         return ok_result($this->signdao->save_member($sql_param));
     } // }}}

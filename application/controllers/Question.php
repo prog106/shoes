@@ -33,11 +33,11 @@ class Question extends CI_Controller {
         $member = $this->session->userdata('loginmember');
         self::manager($member);
 
-        $question = $this->input->post('question', true);
-        $start = $this->input->post('start', true);
-        $end = $this->input->post('end', true);
+        $question = trim(strip_tags($this->input->post('question', true)));
+        $start = $this->input->post('main_start', true);
+        $end = $this->input->post('main_end', true);
         if(empty($question)) {
-            echo json_encode(error_result());
+            echo json_encode(error_result('정상적인 질문을 입력하세요.'));
             die;
         }
         $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['level'], $start, $end);
@@ -52,6 +52,9 @@ class Question extends CI_Controller {
     public function ax_get_question() { // {{{
         $page = $this->input->post('page', true);
         $result = $this->questionbiz->get_question_list($page);
+        foreach($result as $k => $v) {
+            $result[$k]['question'] = nl2br(strip_tags($v['question']));
+        }
         $list = array(
             'recordsTotal' => count($result),
             'data' => $result,

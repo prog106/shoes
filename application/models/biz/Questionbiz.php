@@ -29,7 +29,7 @@ class Questionbiz extends CI_Model {
     public function get_question_list($page=1) { // {{{
         $sql_param = array();
         $sql_param['Q.status'] = 'use';
-        $limit = 10;
+        $limit = 20;
         $paging = ($page-1)*$limit;
         return $this->questiondao->get_question_list($sql_param, $paging, $limit);
     } // }}}
