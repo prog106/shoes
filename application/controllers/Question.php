@@ -34,13 +34,14 @@ class Question extends CI_Controller {
         self::manager($member);
 
         $question = trim(strip_tags($this->input->post('question', true)));
-        $start = $this->input->post('main_start', true);
-        $end = $this->input->post('main_end', true);
+        $start = $this->input->post('start', true);
+        $main_start = $this->input->post('main_start', true);
+        $main_end = $this->input->post('main_end', true);
         if(empty($question)) {
             echo json_encode(error_result('정상적인 질문을 입력하세요.'));
             die;
         }
-        $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['level'], $start, $end);
+        $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
         if($result['result'] == 'ok') {
             echo json_encode(ok_result());
             die;

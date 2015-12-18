@@ -10,7 +10,7 @@ foreach($list as $k => $v) {
             <div class="media">
                 <div class="media-left" style="padding-top:5px;">
                     <a href="#">
-                        <img class="media-object" src="<?=(!empty($v['mem_picture'])?$v['mem_picture']:"")?>" width="35">
+                        <img class="media-object" src="<?=(!empty($v['mem_picture'])?$v['mem_picture']:"/static/image/komment.png")?>" width="35">
                     </a>
                 </div>
                 <div class="media-body">

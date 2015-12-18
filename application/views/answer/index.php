@@ -3,11 +3,11 @@
             <div class="media">
                 <div class="media-left" style="padding-top:5px;">
                     <a href="#">
-                        <img class="media-object" src="<?=(empty($question['mem_picture'])?"":$question['mem_picture'])?>" width="35">
+                        <img class="media-object" src="<?=(!empty($question['mem_picture'])?$question['mem_picture']:"/static/image/komment.png")?>" width="35">
                     </a>
                 </div>
                 <div class="media-body">
-                    <span style="font-size:11px;line-height:25px;"><?$question['mem_name']?></span>
+                    <span style="font-size:11px;line-height:25px;"><?=$question['mem_name']?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$question['create_at']?></span>
                     <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
                     <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>

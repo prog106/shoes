@@ -17,11 +17,10 @@ class Questiondao extends CI_Model {
 
     // 전체 질문 리스트
     public function get_question_list($sql_param, $paging, $limit) { // {{{
-        $this->db->select('Q.*, M.*');
-        $this->db->from('question Q');
-        $this->db->join('members M', 'M.mem_srl = Q.mem_srl');
+        $this->db->select('*');
+        $this->db->from('question');
         $this->db->where($sql_param);
-        $this->db->order_by('que_srl', 'DESC');
+        $this->db->order_by('start DESC, likes DESC, respond DESC, que_srl DESC');
         $this->db->limit($limit, $paging);
         $result = $this->db->get();
         return $result->result_array();
@@ -29,11 +28,10 @@ class Questiondao extends CI_Model {
 
     // 메인 노출 질문 리스트
     public function get_main_question_list($sql_param) { // {{{
-        $this->db->select('Q.*, M.*');
-        $this->db->from('question Q');
-        $this->db->join('members M', 'M.mem_srl = Q.mem_srl');
+        $this->db->select('*');
+        $this->db->from('question');
         $this->db->where($sql_param);
-        $this->db->order_by('que_srl', 'DESC');
+        $this->db->order_by('likes DESC, respond DESC, que_srl DESC');
         $result = $this->db->get();
         return $result->result_array();
     } // }}}
@@ -72,11 +70,10 @@ class Questiondao extends CI_Model {
 
     // 질문 가져오기
     public function get_question($que_srl) { // {{{
-        $this->db->select('Q.*, M.*');
-        $this->db->from('question Q');
-        $this->db->join('members M', 'M.mem_srl = Q.mem_srl');
-        $this->db->where('Q.que_srl', $que_srl);
-        $this->db->where('Q.status', 'use');
+        $this->db->select('*');
+        $this->db->from('question');
+        $this->db->where('que_srl', $que_srl);
+        $this->db->where('status', 'use');
         $result = $this->db->get();
         return $result->row_array();
     } // }}}

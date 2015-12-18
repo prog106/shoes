@@ -1,34 +1,20 @@
 <form class="form-horizontal" id="question_form" onsubmit="return false;">
+    <input type="hidden" name="que_srl" value="0">
     <div class="form-group">
-        <label for="question" class="col-sm-2 control-label">질문</label>
+        <label for="question" class="col-sm-2 control-label">질문을 올려주세요.</label>
         <div class="col-sm-10">
-            <textarea class="form-control" name="question" id="question" rows="3" maxlength="200" placeholder="궁금한게 있나요?"></textarea>
+            <textarea class="form-control" name="question" id="question" rows="3" maxlength="200" placeholder="다양한 질문을 시도해 보아요!"></textarea>
         </div>
     </div>
     <div class="form-group">
-        <label for="main_start" class="col-sm-2 control-label">메인 노출 시작일</label>
-        <div class="col-sm-10">
-            <select name="main_start" id="main_start" class="form-control">
-                <option value="">안함</option>
+        <!-- label for="main_start" class="col-sm-2 control-label">메인 노출 시작일</label -->
+        <div class="col-sm-offset-2 col-sm-10">
+            <select name="start" id="start" class="form-control" style="color:crimson">
+                <option value="">노출 시작 - 필수</option>
+                <option value="<?=date('Y-m-d')?>">오늘부터</option>
 <?
-for($i=0;$i<10;$i++) {
-    $d = date('Y-m-d 00:00:00', strtotime("+".$i." day"));
-?>
-                <option value="<?=$d?>"><?=$d?></option>
-<?
-}
-?>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="main_end" class="col-sm-2 control-label">메인 노출 종료일</label>
-        <div class="col-sm-10">
-            <select name="main_end" id="main_end" class="form-control">
-                <option value="">안함</option>
-<?
-for($i=0;$i<20;$i++) {
-    $d = date('Y-m-d 23:59:59', strtotime("+".$i." day"));
+for($i=1;$i<11;$i++) {
+    $d = date('Y-m-d', strtotime("+".$i." day"));
 ?>
                 <option value="<?=$d?>"><?=$d?></option>
 <?
@@ -39,7 +25,37 @@ for($i=0;$i<20;$i++) {
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="button" id="regist" class="btn btn-warning">이 질문에 응답해라!</button>
+            <select name="main_start" id="main_start" class="form-control">
+                <option value="">메인 노출 시작 - 필수아님</option>
+<?
+for($i=0;$i<10;$i++) {
+    $d = date('Y-m-d', strtotime("+".$i." day"));
+?>
+                <option value="<?=$d?> 00:00:00"><?=$d?></option>
+<?
+}
+?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <select name="main_end" id="main_end" class="form-control">
+                <option value="">메인 노출 종료일 - 필수아님</option>
+<?
+for($i=0;$i<20;$i++) {
+    $d = date('Y-m-d', strtotime("+".$i." day"));
+?>
+                <option value="<?=$d?> 23:59:59"><?=$d?></option>
+<?
+}
+?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" id="regist" class="btn btn-warning">이 질문을 해보자꾸나!</button>
         </div>
     </div>
 </form>
@@ -54,6 +70,10 @@ var scrollOK = true;
 
 $(document).ready(function(){
     $('#regist').click(function() {
+        if(!$('#start option:selected').val()) {
+            alert('노출 시작일을 선택해 주세요.');
+            return false;
+        }
         if(!$('#main_start option:selected').val() && $('#main_end option:selected').val()) {
             alert('시작일과 종료일 다시 체크해 주세요');
             return false;
@@ -70,7 +90,7 @@ $(document).ready(function(){
         var data = $('#question_form').serialize();
         ax_post(url, data, function(ret) {
             if(ret.result == 'ok') {
-                self.location.reload();
+                window.location.reload();
             } else {
                 alert(ret.msg);
             }
@@ -105,21 +125,28 @@ function get_question_list(page_val){
                 var col = 'black';
                 html += '<li class="list-group-item">';
                 html += data.que_srl;
-                if(data.main_start < '<?=YMD_HIS?>' && data.main_end > '<?=YMD_HIS?>') {
-                    col = 'crimson';
-                } else if(data.main_end < '<?=YMD_HIS?>') {
-                    col = 'gray';
-                } else if(data.main_start > '<?=YMD_HIS?>') {
-                    col = 'darkorange';
+                console.log(data.start);
+                if(data.start >= '<?=date('Y-m-d')?>') {
+                    if(data.main_start < '<?=YMD_HIS?>' && data.main_end > '<?=YMD_HIS?>') {
+                        col = 'crimson';
+                    } else if(data.main_start > '<?=YMD_HIS?>') {
+                        col = 'darkorange';
+                    }
                 }
                 if(data.main_start) {
                     html += "<br>"+data.main_start+" ~ "+data.main_end;
-                    html += "<b>";
+                }
+                if(data.status == 'delete') {
+                    html += '<span style="text-decoration:line-through;">';
                 }
                 html += "<br><span style=\"color:"+col+";\">"+data.question+"</span>";
-                if(data.main_start) {
-                    html += "</b></span>";
+                if(data.status == 'delete') {
+                    html += '</span>';
                 }
+                if(data.main_start) {
+                    html += "</span>";
+                }
+                html += '<br>댓글 '+data.respond+' 좋아요 '+data.likes;
                 html += '</li>';
             }
             $('#question_list').append(html);
