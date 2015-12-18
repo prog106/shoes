@@ -2,48 +2,43 @@
         <div class="col-sm-12">
             <div class="media">
                 <div class="media-left" style="padding-top:5px;">
-<?
-if($question['mem_level'] !== 'manager') {
-?>
                     <a href="#">
-                        <img class="media-object" src="<?=(empty($question['mem_picture'])?"":$question['mem_picture'])?>" width="50">
+                        <img class="media-object" src="<?=(empty($question['mem_picture'])?"":$question['mem_picture'])?>" width="35">
                     </a>
-<?
-}
-?>
                 </div>
                 <div class="media-body">
-<?
-if($question['mem_level'] !== 'manager') {
-?>
                     <span style="font-size:11px;line-height:25px;"><?$question['mem_name']?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$question['create_at']?></span>
+                    <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
+                    <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>
+<?
+if($question['mem_srl'] !== $member['mem_srl']) {
+?>
+                    <a href="javascript:;" class="likethis" id="likethis<?=$question['que_srl']?>" data-question="<?=$question['que_srl']?>" data-status="<?=(empty($like[$question['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-heart" id="like<?=$question['que_srl']?>" style="font-size:20px;color:<?=(empty($like[$question['que_srl']]))?"gray":"darkorange"?>;"></span></a>
 <?
 }
 ?>
-                    <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
-                    <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>
-                    <a href="javascript:;" class="likethis" id="likethis<?=$question['que_srl']?>" data-question="<?=$question['que_srl']?>" data-status="<?=(empty($like[$question['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-heart" id="like<?=$question['que_srl']?>" style="font-size:20px;color:<?=(empty($like[$question['que_srl']]))?"gray":"darkorange"?>;"></span></a>
-                    <a href="javascript:;" id="answer_area_view" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-comment" style="font-size:20px;color:mediumorchid;"></span></a>
+                    <!-- a href="javascript:;" id="answer_area_view" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-comment" style="font-size:20px;color:mediumorchid;"></span></a -->
                 </div>
             </div>
             <hr style="margin-top:15px;margin-bottom:10px">
         </div>
-    </div>
-    <div id="answer_area" style="display:none;">
+        <div class="col-sm-12">
         <form id="answer_form" onsubmit="return false;">
         <input type="hidden" name="question" id="question" value="<?=$question['que_srl']?>">
-            <div class="form-group">
-                <label for="answer">응답하라</label>
+            <div class="input-group">
+                <!-- label for="answer">응답하라</label -->
                 <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="<?=(empty($member))?"로그인 후 이용해 주세요.":"응답해 주세요!"?>"<?=(empty($member))?" READONLY":""?>></textarea>
+                <span class="input-group-btn">
+                    <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>응답한다!</button>
+                </span>
             </div>
-            <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>응답한다!</button>
         </form>
-        <br>
+        </div>
     </div>
-    <ul class="list-group" data-role="listview" data-inset="true" id="answer_list">
+    <ul class="list-group" data-role="listview" data-inset="true" id="answer_list" style="margin-top:15px;">
     </ul>
-<button type="button" id="more" class="glyphicon glyphicon-chevron-down btn btn-default btn-sm" style="width:100%"> 더보기</button>
+    <button type="button" id="more" class="glyphicon glyphicon-chevron-down btn btn-default btn-sm" style="width:100%"> 더보기</button>
 <script type="text/javascript">
 var page_num = 1;
 var timer    = setInterval(function () { scrollOK = true; }, 100);
@@ -137,9 +132,11 @@ $(document).ready(function(){
                     }
                     html += ' <span style="font-size:11px"> [ '+data.create_at+' ] '+data.mem_name+'</span> ';
                     html += ' <span style="color:darkorange;font-size:11px"> 좋아요 <span style="font-size:11px" id="likecount'+data.ans_srl+'">'+data.likes+'</span></span>';
-                    html += '<a href="javascript:;" class="likeans" style="float:right;" id="likethis'+data.ans_srl+'" data-ans="'+data.ans_srl+'" data-status="'+st+'"><span class="glyphicon glyphicon-heart" id="like'+data.ans_srl+'" style="font-size:15px;color:'+like_color+';"></span></a><br>';
+                    if(!data.me) {
+                        html += '<a href="javascript:;" class="likeans" style="float:right;" id="likethis'+data.ans_srl+'" data-ans="'+data.ans_srl+'" data-status="'+st+'"><span class="glyphicon glyphicon-heart" id="like'+data.ans_srl+'" style="font-size:15px;color:'+like_color+';"></span></a>';
+                    }
                     //html += data.ans_srl;
-                    html += data.answer;
+                    html += '<br>'+data.answer;
                     html += '</li>';
                 }
                 $('#answer_list').append(html);

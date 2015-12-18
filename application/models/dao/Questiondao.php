@@ -72,9 +72,12 @@ class Questiondao extends CI_Model {
 
     // 질문 가져오기
     public function get_question($que_srl) { // {{{
-        $this->db->where('que_srl', $que_srl);
-        $this->db->where('status', 'use');
-        $result = $this->db->get('question');
+        $this->db->select('Q.*, M.*');
+        $this->db->from('question Q');
+        $this->db->join('members M', 'M.mem_srl = Q.mem_srl');
+        $this->db->where('Q.que_srl', $que_srl);
+        $this->db->where('Q.status', 'use');
+        $result = $this->db->get();
         return $result->row_array();
     } // }}}
 

@@ -43,6 +43,9 @@ if(!empty($member)) {
 </nav>
 <script>
 $(document).ready(function() {
+<?
+if(!empty($member)) {
+?>
     $('#logout').click(function() {
         if(!confirm('로그아웃 하시겠습니까?')) {
             return false;
@@ -57,6 +60,9 @@ $(document).ready(function() {
             }
         });
     });
+<?
+}
+?>
 });
 </script>
 
