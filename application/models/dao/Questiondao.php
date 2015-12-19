@@ -15,6 +15,27 @@ class Questiondao extends CI_Model {
         return $this->db->insert_id();
     } // }}}
 
+    // 오늘 질문 갯수 가져오기
+    public function get_question_recent($mem_srl, $start) { // {{{
+        $this->db->select('count(*) AS cnt');
+        $this->db->from('question');
+        $this->db->where('mem_srl', $mem_srl);
+        $this->db->where('start', $start);
+        //$this->db->where('status', 'use');
+        $this->db->order_by('que_srl', 'DESC');
+        $this->db->limit('1');
+        $result = $this->db->get();
+        return $result->row_array();
+    } // }}}
+
+    // 질문 업데이트
+    public function update_question($sql_param, $que_srl) { // {{{
+        $this->db->set($sql_param);
+        $this->db->where('que_srl', $que_srl);
+        $this->db->update('question');
+        return $this->db->affected_rows();
+    } // }}}
+
     // 전체 질문 리스트
     public function get_question_list($sql_param, $paging, $limit) { // {{{
         $this->db->select('*');
@@ -33,6 +54,7 @@ class Questiondao extends CI_Model {
         $this->db->where($sql_param);
         $this->db->order_by('likes DESC, respond DESC, que_srl DESC');
         $result = $this->db->get();
+        debug_log($this->db->last_query());
         return $result->result_array();
     } // }}}
 

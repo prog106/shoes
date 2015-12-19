@@ -18,21 +18,17 @@
 <?
 if(!empty($member)) {
 ?>
-                <li class="dropdown">
+                <li>
                     <a href="javascript:;">어서오세요! <?=$member['mem_name'].(($member['level']==='manager')?" 관리자":"");?> 님</a>
                 </li>
-<?
-    if($member['level'] === 'manager') {
-?>
-                <li><a href="/question">[관리자] 응답하라 오빠!</a></li>
-<?
-    }
-?>
+                <li><a href="/question">질문 올리기</a></li>
+                <li><a href="/lists">다른 질문 보기</a></li>
                 <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
                 <li><a href="javascript:;" id="logout">로그아웃</a></li>
 <?
 } else {
 ?>
+                <li><a href="/lists">다른 질문 보기</a></li>
                 <li><a href="/sign/login">로그인</a></li>
 <?
 }

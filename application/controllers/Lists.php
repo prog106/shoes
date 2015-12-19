@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Lists extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
     }
 
-    // 메인
+    // 일반
 	public function index() { // {{{
         $member = $this->session->userdata('loginmember');
         if(empty($this->input->cookie('nologin')) && empty($member)) {
@@ -15,7 +15,7 @@ class Home extends CI_Controller {
             die;
         }
         $this->load->model('biz/Questionbiz', 'questionbiz');
-        $result = $this->questionbiz->get_main_question_list(1);
+        $result = $this->questionbiz->get_question_list(1);
         $like = array();
         if(!empty($result)) {
             if(!empty($member) && $member['mem_srl'] > 0) {

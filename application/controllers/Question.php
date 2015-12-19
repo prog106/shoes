@@ -12,9 +12,6 @@ class Question extends CI_Controller {
         if(empty($member)) {
             alertmsg_move('로그인 후 이용해 주세요', '/');
             die;
-        } else if($member['level'] !== 'manager') {
-            alertmsg_move('정상적인 접근이 아닙니다.', '/');
-            die;
         }
     } // }}}
 
@@ -37,28 +34,62 @@ class Question extends CI_Controller {
         $start = $this->input->post('start', true);
         $main_start = $this->input->post('main_start', true);
         $main_end = $this->input->post('main_end', true);
+        $que_srl = $this->input->post('que_srl', true);
         if(empty($question)) {
-            echo json_encode(error_result('정상적인 질문을 입력하세요.'));
+            echo json_encode(error_result('질문을 입력하세요.'));
             die;
         }
-        $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
+        if(!empty($que_srl) && $que_srl > 0) {
+            $result = $this->questionbiz->update_question($que_srl, $question, $member['mem_srl']);
+        } else {
+            $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
+        }
         if($result['result'] == 'ok') {
             echo json_encode(ok_result());
             die;
+        } else {
+            echo json_encode(error_result($result['msg']));
         }
-        echo json_encode(error_result());
+    } // }}}
+
+    // 질문 지우기
+    public function ax_set_question_del() { // {{{
+        $member = $this->session->userdata('loginmember');
+        self::manager($member);
+
+        $que_srl = $this->input->post('que', true);
+        if(!empty($que_srl) && $que_srl > 0) {
+            $result = $this->questionbiz->delete_question($que_srl, $member['mem_srl']);
+        } else {
+            return error_result('잘못된 접근입니다.');
+        }
+        if($result['result'] == 'ok') {
+            echo json_encode(ok_result());
+            die;
+        } else {
+            echo json_encode(error_result($result['msg']));
+        }
     } // }}}
 
     // 질문 가져오기
     public function ax_get_question() { // {{{
+        $member = $this->session->userdata('loginmember');
+        self::manager($member);
+
         $page = $this->input->post('page', true);
-        $result = $this->questionbiz->get_question_list($page);
+        $result = $this->questionbiz->get_question_list($page, $member['mem_srl']);
+        $list = array();
         foreach($result as $k => $v) {
-            $result[$k]['question'] = nl2br(strip_tags($v['question']));
+            $v['question'] = nl2br(strip_tags($v['question']));
+            if($member['level'] === 'manager') {
+                $list[] = $this->load->view('question/mitem', $v, true);
+            } else {
+                $list[] = $this->load->view('question/item', $v, true);
+            }
         }
         $list = array(
             'recordsTotal' => count($result),
-            'data' => $result,
+            'data' => $list,
         );
         echo json_encode($list);
     } // }}}
