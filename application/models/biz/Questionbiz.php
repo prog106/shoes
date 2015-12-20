@@ -36,13 +36,16 @@ class Questionbiz extends CI_Model {
     } // }}}
 
     // 질문 업데이트
-    public function update_question($que_srl, $question, $mem_srl) { // {{{
+    public function update_question($que_srl, $question, $mem_srl, $start=null, $main_start=null, $main_end=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(empty($que_srl)) return $error_result;
         if(!empty($question)) $sql_param['question'] = $question;
         else return $error_result;
         if(empty($mem_srl)) return $error_result;
+        if(!empty($start)) $sql_param['start'] = $start;
+        if(!empty($main_start)) $sql_param['main_start'] = $main_start;
+        if(!empty($main_end)) $sql_param['main_end'] = $main_end;
         $info = self::get_question($que_srl);
         if($info['mem_srl'] !== $mem_srl) return error_result('잘못된 접근입니다.');
         return ok_result($this->questiondao->update_question($sql_param, $que_srl));

@@ -40,7 +40,11 @@ class Question extends CI_Controller {
             die;
         }
         if(!empty($que_srl) && $que_srl > 0) {
-            $result = $this->questionbiz->update_question($que_srl, $question, $member['mem_srl']);
+            if($member['level'] === 'manager') {
+                $result = $this->questionbiz->update_question($que_srl, $question, $member['mem_srl'], $start, $main_start, $main_end);
+            } else {
+                $result = $this->questionbiz->update_question($que_srl, $question, $member['mem_srl']);
+            }
         } else {
             $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
         }

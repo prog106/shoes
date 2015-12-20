@@ -1,7 +1,10 @@
 <form class="form-horizontal" id="question_form" onsubmit="return false;">
     <input type="hidden" name="que_srl" id="que_srl" value="0">
     <div class="form-group">
-        <label for="question" class="col-sm-2 control-label">질문을 올려주세요. <span style="color:crimson">주의! 질문은 하루 한개만 가능합니다.</font></label>
+        <label for="question" class="col-sm-12 control-label"><span style="color:crimson">주의! 질문은 하루 한개만 가능합니다.<br>오늘의 질문을 삭제하시면 오늘은 다시 등록할 수 없습니다.</font></label>
+    </div>
+    <div class="form-group">
+        <label for="question" class="col-sm-2 control-label">질문을 올려주세요.</label>
         <div class="col-sm-10">
             <textarea class="form-control" name="question" id="question" rows="3" maxlength="200" placeholder="질문을 입력해 주세요."></textarea>
         </div>
@@ -29,7 +32,7 @@ if($member['level'] === 'manager') {
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <select name="main_start" id="main_start" class="form-control">
-                <option value="">메인 노출 시작 - 필수아님</option>
+                <option value="">메인 노출 시작(00:00:00) - 필수아님</option>
 <?
     for($i=0;$i<10;$i++) {
         $d = date('Y-m-d', strtotime("+".$i." day"));
@@ -44,7 +47,7 @@ if($member['level'] === 'manager') {
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <select name="main_end" id="main_end" class="form-control">
-                <option value="">메인 노출 종료일 - 필수아님</option>
+                <option value="">메인 노출 종료일(23:59:59) - 필수아님</option>
 <?
     for($i=0;$i<20;$i++) {
         $d = date('Y-m-d', strtotime("+".$i." day"));
@@ -186,11 +189,21 @@ function get_question_list(page_val){
             if(!confirm('질문을 수정하시겠습니까?')) return false;
             $('#question').val($('#question'+$(this).data('que')).text());
             $('#que_srl').val($(this).data('que'));
+<?
+if($member['level'] === 'manager') {
+?>
+            $('#start').appendto('<option value="'+$(this).data('start')+'" selected>'+$(this).data('start')+'</option>').val($(this).data('start'));
+            $('#main_start').append('<option value="'+$(this).data('main_start')+'" selected>'+$(this).data('main_start').substr(0,10)+'</option>').val($(this).data('main_start'));
+            $('#main_end').append('<option value="'+$(this).data('main_end')+'" selected>'+$(this).data('main_end')+'</option>').val($(this).data('main_end'));
+<?
+}
+?>
             $('#regist').text('질문 수정하기');
             $('#cancel').show();
+            window.scrollTo(0,0);
         });
         $('.delthis').click(function() {
-            if(!confirm('작성된 응답과 좋아요 정보가 삭제됩니다.\n\n정말 삭제하시겠습니까?')) return false;
+            if(!confirm('작성된 응답과 좋아요 정보가 삭제됩니다.\n\n삭제 후 복구가 불가능 합니다.\n\n정말 삭제하시겠습니까?')) return false;
             var q = $(this).data('que');
             var url = "/question/ax_set_question_del";
             var data = {que:q};
