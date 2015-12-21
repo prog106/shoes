@@ -7,7 +7,7 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <span style="font-size:11px;line-height:25px;"><?=($question['mem_level'] !== 'manager')?$question['mem_name']:"komment"?></span>
+                    <span style="font-size:11px;line-height:25px;"><?=($question['mem_level'] !== 'manager')?$question['mem_name']:"Komment"?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$question['create_at']?></span>
                     <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
                     <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>

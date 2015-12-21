@@ -1,47 +1,3 @@
-  <div class="slidemenu slidemenu-left">
-    <div class="slidemenu-header">
-      <div>
-        코멘트
-      </div>
-    </div>
-    <div class="slidemenu-body">
-      <ul class="slidemenu-content">
-<?
-if(!empty($member)) {
-?>
-        <li>
-            <a href="javascript:;">
-                <img src="<?=$member['mem_picture']?>" width="50">
-                <span style="position:absolute;line-height:45px;margin-left:2px;"><?=(($member['level']==='manager')?"[관리자] ":"")?> <?=$member['mem_name']?> 님</span>
-            </a>
-        </li>
-        <li><a href="/question/">질문 올리기</a></li>
-        <li><a href="/lists/">다른 질문 보기</a></li>
-        <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
-        <li><a href="javascript:;" id="logout">로그아웃</a></li>
-<?
-} else {
-?>
-        <li><a href="/lists/">다른 질문 보기</a></li>
-        <li><a href="/sign/login/">로그인</a></li>
-<?
-}
-?>
-      </ul>
-    </div>
-  </div>
-  <div id="main">
-    <header id="header">
-    <span style="font-size:20px;margin-top:9px;position:absolute;top:0;left:50%;margin-left:-30px;padding:6px 5px;cursor:pointer;" id="gohome">코멘트</span>
-    <button type="button" class="navbar-toggle" data-canvas="body">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
-      <span class="button menu-button-left">
-      </span>
-    </header>
-    <div id="contents">
 <script>
 $(document).ready(function() {
 <?
@@ -68,5 +24,43 @@ if(!empty($member)) {
     $('#gohome').click(function() { window.location.href='/'; });
 });
 </script>
-
-<div class="container theme-showcase" role="main">
+<div class="slidemenu slidemenu-left">
+    <div class="slidemenu-header">
+        <div>
+            코멘트
+        </div>
+    </div>
+    <div class="slidemenu-body">
+        <ul class="slidemenu-content">
+<?
+if(!empty($member)) {
+?>
+            <li>
+                <a href="javascript:;">
+                    <img src="<?=$member['mem_picture']?>" width="50">
+                    <span style="position:absolute;line-height:45px;margin-left:2px;"><?=(($member['level']==='manager')?"[관리자] ":"")?> <?=$member['mem_name']?> 님</span>
+                </a>
+            </li>
+            <li><a href="/question/">질문 올리기</a></li>
+            <li><a href="/lists/">다른 질문 보기</a></li>
+            <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
+            <li><a href="javascript:;" id="logout">로그아웃</a></li>
+<?
+} else {
+?>
+            <li><a href="/lists/">다른 질문 보기</a></li>
+            <li><a href="/sign/login/">로그인</a></li>
+<?
+}
+?>
+        </ul>
+    </div>
+</div>
+<div id="main">
+    <header id="header">
+        <span style="font-size:20px;margin-top:9px;position:absolute;top:0;left:50%;margin-left:-30px;padding:6px 5px;cursor:pointer;" id="gohome">코멘트</span>
+        <span class="button menu-button-left" style="cursor:pointer">
+        </span>
+    </header>
+    <div id="contents">
+        <div class="container theme-showcase" role="main">
