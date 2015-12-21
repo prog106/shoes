@@ -1,9 +1,9 @@
+    <br>
     <!-- form id="login_form">
     이메일 <input type="text" name="email" placeholder="이메일" value="" maxlength="20" id="email"><br>
     비밀번호 <input type="password" name="pwd" value="" maxlength="20" id="pwd"><br>
     <button type="button" id="login">로그인</button>
     </form -->
-
     <a href="javascript:;" onclick="facebooklogin()" class="btn btn-lg btn-primary btn-block" role="button">Facebook Login</a>
     <br>
     <a href="javascript:;" onclick="kakaologin()" class="btn btn-lg btn-warning btn-block" role="button" id="custom-login-btn">Kakao Login</a>

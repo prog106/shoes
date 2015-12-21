@@ -14,11 +14,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/bootstrap-datepicker.js"></script>
     <script src="/static/js/moment.min.js"></script>
     <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <script src="/static/js/iscroll.js"></script>
+    <script src="/static/js/sp-slidemenu.js"></script>
 </head>
 <body role="document">

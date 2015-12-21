@@ -56,7 +56,9 @@ class Sign extends CI_Controller {
     public function login() { // {{{
         $member = $this->session->userdata('loginmember');
         if(!empty($member)) redirect('/', 'refresh');
-        load_view('sign/login');
+        $data = array();
+        $data['sign'] = true;
+        load_view('sign/login', $data);
     } // }}}
 
     // 이메일 회원가입 efs

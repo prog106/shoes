@@ -13,14 +13,12 @@
 if($member['level'] === 'manager') {
 ?>
     <div class="form-group">
-        <!-- label for="main_start" class="col-sm-2 control-label">메인 노출 시작일</label -->
-        <div class="col-sm-offset-2 col-sm-10">
-            <select name="start" id="start" class="form-control" style="color:crimson">
-                <option value="">노출 시작 - 필수</option>
-                <option value="<?=date('Y-m-d')?>">오늘부터</option>
+        <label for="start_y" class="col-sm-2 control-label col-xs-3">노출 시작일</label>
+        <div class="col-sm-3 col-xs-3">
+            <select name="start_y" id="start_y" class="form-control" style="color:crimson;">
 <?
-    for($i=1;$i<11;$i++) {
-        $d = date('Y-m-d', strtotime("+".$i." day"));
+    for($i=0;$i<5;$i++) {
+        $d = date('Y', strtotime("+".$i." year"));
 ?>
                 <option value="<?=$d?>"><?=$d?></option>
 <?
@@ -28,35 +26,91 @@ if($member['level'] === 'manager') {
 ?>
             </select>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <select name="main_start" id="main_start" class="form-control">
-                <option value="">메인 노출 시작(00:00:00) - 필수아님</option>
+        <div class="col-sm-3 col-xs-3">
+            <select name="start_m" id="start_m" class="form-control" style="color:crimson;">
+                <option value="0">월</option>
 <?
-    for($i=0;$i<10;$i++) {
-        $d = date('Y-m-d', strtotime("+".$i." day"));
+    for($i=1;$i<13;$i++) {
 ?>
-                <option value="<?=$d?> 00:00:00"><?=$d?></option>
+                <option value="<?=$i?>"><?=$i?></option>
 <?
     }
 ?>
             </select>
         </div>
+        <div class="col-sm-3 col-xs-3">
+            <input type="number" name="start_d" max="2" value="" style="color:crimson;" class="form-control day" id="start_d" placeholder="일">
+            <!-- select name="start_d" id="start_d" class="form-control" style="color:crimson;">
+                <option value="0">일</option>
+            </select -->
+        </div>
     </div>
     <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <select name="main_end" id="main_end" class="form-control">
-                <option value="">메인 노출 종료일(23:59:59) - 필수아님</option>
+        <label for="main_start_y" class="col-sm-2 control-label col-xs-3">메인 노출 시작일</label>
+        <div class="col-sm-3 col-xs-3">
+            <select name="main_start_y" id="main_start_y" class="form-control">
+                <option value="0">년</option>
 <?
-    for($i=0;$i<20;$i++) {
-        $d = date('Y-m-d', strtotime("+".$i." day"));
+    for($i=0;$i<5;$i++) {
+        $d = date('Y', strtotime("+".$i." year"));
 ?>
-                <option value="<?=$d?> 23:59:59"><?=$d?></option>
+                <option value="<?=$d?>"><?=$d?></option>
 <?
     }
 ?>
             </select>
+        </div>
+        <div class="col-sm-3 col-xs-3">
+            <select name="main_start_m" id="main_start_m" class="form-control">
+                <option value="0">월</option>
+<?
+    for($i=1;$i<13;$i++) {
+?>
+                <option value="<?=$i?>"><?=$i?></option>
+<?
+    }
+?>
+            </select>
+        </div>
+        <div class="col-sm-3 col-xs-3">
+            <input type="number" name="main_start_d" max="2" value="" class="form-control day" id="main_start_d" placeholder="일">
+            <!-- select name="main_start_d" id="main_start_d" class="form-control">
+                <option value="0">일</option>
+            </select -->
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="main_start_y" class="col-sm-2 control-label col-xs-3">메인 노출 종료일</label>
+        <div class="col-sm-3 col-xs-3">
+            <select name="main_end_y" id="main_end_y" class="form-control">
+                <option value="0">년</option>
+<?
+    for($i=0;$i<5;$i++) {
+        $d = date('Y', strtotime("+".$i." year"));
+?>
+                <option value="<?=$d?>"><?=$d?></option>
+<?
+    }
+?>
+            </select>
+        </div>
+        <div class="col-sm-3 col-xs-3">
+            <select name="main_end_m" id="main_end_m" class="form-control">
+                <option value="0">월</option>
+<?
+    for($i=1;$i<13;$i++) {
+?>
+                <option value="<?=$i?>"><?=$i?></option>
+<?
+    }
+?>
+            </select>
+        </div>
+        <div class="col-sm-3 col-xs-3">
+            <input type="number" name="main_end_d" max="2" value="" class="form-control day" id="main_end_d" placeholder="일">
+            <!-- select name="main_end_d" id="main_end_d" class="form-control">
+                <option value="0">일</option>
+            </select -->
         </div>
     </div>
 <?
@@ -88,20 +142,8 @@ $(document).ready(function(){
 <?
 if($member['level'] === 'manager') {
 ?>
-        if(!$('#start option:selected').val()) {
+        if(!$('#start_m option:selected').val() || !$('#start_d').val()) {
             alert('노출 시작일을 선택해 주세요.');
-            return false;
-        }
-        if(!$('#main_start option:selected').val() && $('#main_end option:selected').val()) {
-            alert('시작일과 종료일 다시 체크해 주세요');
-            return false;
-        }
-        if($('#main_start option:selected').val() && !$('#main_end option:selected').val()) {
-            alert('시작일과 종료일 다시 체크해 주세요');
-            return false;
-        }
-        if($('#main_start option:selected').val() > $('#main_end option:selected').val()) {
-            alert('시작일과 종료일 다시 체크해 주세요');
             return false;
         }
 <?
@@ -137,6 +179,11 @@ if($member['level'] === 'manager') {
         $('#regist').text('질문 올리기');
         $('#que_srl').val(0);
         $('#question').val('');
+    });
+    $('.day').keyup(function() {
+        if($(this).val() > 31 || $(this).val() < 1) {
+            $(this).val('');
+        }
     });
 });
 
@@ -192,9 +239,15 @@ function get_question_list(page_val){
 <?
 if($member['level'] === 'manager') {
 ?>
-            $('#start').appendto('<option value="'+$(this).data('start')+'" selected>'+$(this).data('start')+'</option>').val($(this).data('start'));
-            $('#main_start').append('<option value="'+$(this).data('main_start')+'" selected>'+$(this).data('main_start').substr(0,10)+'</option>').val($(this).data('main_start'));
-            $('#main_end').append('<option value="'+$(this).data('main_end')+'" selected>'+$(this).data('main_end')+'</option>').val($(this).data('main_end'));
+            $('#start_y').val($(this).data('start_y'));
+            $('#start_m').val(parseInt($(this).data('start_m')));
+            $('#start_d').val(parseInt($(this).data('start_d')));
+            $('#main_start_y').val($(this).data('main_start_y'));
+            $('#main_start_m').val(parseInt($(this).data('main_start_m')));
+            $('#main_start_d').val(parseInt($(this).data('main_start_d')));
+            $('#main_end_y').val($(this).data('main_end_y'));
+            $('#main_end_m').val(parseInt($(this).data('main_end_m')));
+            $('#main_end_d').val(parseInt($(this).data('main_end_d')));
 <?
 }
 ?>

@@ -1,42 +1,42 @@
-<!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" style="float:left;margin-left:10px;">
-                <span class="sr-only"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/" style="color:#FFFFFF">Today's 코멘트</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <!--- li><a href="#">2015</a></li>
-                <li><a href="#about">1997</a></li>
-                <li><a href="#contact">1987</a></li -->
+  <div class="slidemenu slidemenu-left">
+    <div class="slidemenu-header">
+      <div>
+        코멘트
+      </div>
+    </div>
+    <div class="slidemenu-body">
+      <ul class="slidemenu-content">
 <?
 if(!empty($member)) {
 ?>
-                <li>
-                    <a href="javascript:;">어서오세요! <?=$member['mem_name'].(($member['level']==='manager')?" 관리자":"");?> 님</a>
-                </li>
-                <li><a href="/question">질문 올리기</a></li>
-                <li><a href="/lists">다른 질문 보기</a></li>
-                <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
-                <li><a href="javascript:;" id="logout">로그아웃</a></li>
+        <li><a href="javascript:;"><img src="<?=$member['mem_picture']?>" width="50"> <?=$member['mem_name'].(($member['level']==='manager')?" 관리자":"");?> 님</a></li>
+        <li><a href="/question/">질문 올리기</a></li>
+        <li><a href="/lists/">다른 질문 보기</a></li>
+        <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
+        <li><a href="javascript:;" id="logout">로그아웃</a></li>
 <?
 } else {
 ?>
-                <li><a href="/lists">다른 질문 보기</a></li>
-                <li><a href="/sign/login">로그인</a></li>
+        <li><a href="/lists/">다른 질문 보기</a></li>
+        <li><a href="/sign/login/">로그인</a></li>
 <?
 }
 ?>
-            </ul>
-        </div><!--/.nav-collapse -->
+      </ul>
     </div>
-</nav>
+  </div>
+  <div id="main">
+    <header id="header">
+    <span style="font-size:20px;margin-top:9px;position:absolute;top:0;left:50%;margin-left:-30px;padding:6px 5px;">코멘트</span>
+    <button type="button" class="navbar-toggle" data-canvas="body">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+      <span class="button menu-button-left">
+      </span>
+    </header>
+    <div id="contents">
 <script>
 $(document).ready(function() {
 <?
@@ -59,7 +59,9 @@ if(!empty($member)) {
 <?
 }
 ?>
+var menu = SpSlidemenu('#main', '.slidemenu-left', '.menu-button-left', {direction: 'left'});
+
 });
 </script>
 
-<div class="container theme-showcase" role="main" style="margin-top:70px;">
+<div class="container theme-showcase" role="main">
