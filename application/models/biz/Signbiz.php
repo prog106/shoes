@@ -33,7 +33,8 @@ class Signbiz extends CI_Model {
                 $mem_info['mem_picture'] = $picture;
             }
             if(!empty($name_prm)) {
-                $this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
+                // 이미 가입되어 있으면 정보를 갱신하지 않는다.
+                //$this->signdao->sns_update_member($name_prm, $mem['mem_srl']);
             }
         } else {
             $mem_srl = self::save_member($mem_type, $efs_srl, $mem_type.$efs_srl, $mem_type, $mem_type, $name, $email, $picture);
