@@ -111,7 +111,11 @@ if(!function_exists('close_reload')) {
         echo "</head>";
         echo "<body>";
         echo "<script>";
-        echo "opener.location.reload();";
+        if(empty($url)) {
+            echo "opener.location.reload();";
+        } else {
+            echo "opener.location.replace('".$url."');";
+        }
         echo "window.close();";
         echo "</script>";
         echo "</body>";

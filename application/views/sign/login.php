@@ -24,7 +24,15 @@ function kakaologin() {
                     var url = '/sign/ax_set_kakao';
                     var data = {'id':res.id, 'name':res.properties.nickname, 'picture':res.properties.thumbnail_image};
                     ax_post(url, data, function(ret) {
-                        if(ret.result == 'ok') window.location.href='/';
+                        if(ret.result == 'ok') {
+                            window.location.href='/';
+                        } else {
+                            if(ret.msg == 'joins') {
+                                window.location.replace('/sign/joins');
+                            } else {
+                                alert(ret.msg);
+                            }
+                        }
                     });
                 },
                 fail: function(error) {

@@ -36,9 +36,9 @@ if(!empty($member)) {
 if(!empty($member)) {
 ?>
             <li>
-                <a href="javascript:;">
+                <a href="/sign/info">
                     <img src="<?=$member['mem_picture']?>" width="50">
-                    <span style="position:absolute;line-height:45px;margin-left:2px;"><?=(($member['level']==='manager')?"[관리자] ":"")?> <?=$member['mem_name']?> 님</span>
+                    <span style="position:absolute;line-height:45px;margin-left:7px;"><?=(($member['level']==='manager')?"[관리자] ":"")?> <?=$member['mem_name']?> 님</span>
                 </a>
             </li>
             <li><a href="/question/">질문 올리기</a></li>

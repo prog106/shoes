@@ -9,6 +9,17 @@ class Signbiz extends CI_Model {
         $this->load->model('dao/Signdao', 'signdao');
     }
 
+    // sns 가입 여부 체크
+    public function sns_login_member($mem_type, $efs_srl) { // {{{
+        $error_result = error_result('필수값이 누락되었습니다.');
+        $sql_param = array();
+        if(!empty($mem_type)) $sql_param['mem_type'] = $mem_type;
+        else return $error_result;
+        if(!empty($efs_srl)) $sql_param['efs_srl'] = $efs_srl;
+        else return $error_result;
+        return ok_result($this->signdao->sns_login_member($sql_param));
+    } // }}}
+
     // sns 회원가입
     public function sns_member($mem_type, $efs_srl, $email, $name, $picture=null) { // {{{
         $sns_prm = array();
@@ -110,4 +121,32 @@ class Signbiz extends CI_Model {
         return ok_result($this->signdao->login_member($sql_param));
     } // }}}
 
+    // 회원 정보 가져오기
+    public function get_member($mem_srl) { // {{{
+        $error_result = error_result('필수값이 누락되었습니다.');
+        $sql_param = array();
+        if(!empty($mem_srl)) $sql_param['mem_srl'] = $mem_srl;
+        else return $error_result;
+        return ok_result($this->signdao->sns_login_member($sql_param));
+    } // }}}
+
+    // 회원 정보수정
+    public function update_member($mem_srl, $name, $picture=null) { // {{{
+        $error_result = error_result('필수값이 누락되었습니다.');
+        $sql_param = array();
+        if(empty($mem_srl)) return $error_result;
+        if(!empty($name)) $sql_param['mem_name'] = $name;
+        else return $error_result;
+        if(!empty($picture)) $sql_param['mem_picture'] = $picture;
+        return ok_result($this->signdao->sns_update_member($sql_param, $mem_srl));
+    } // }}}
+
+    // 닉네임 체크
+    public function get_nickname($name) { // {{{
+        $error_result = error_result('필수값이 누락되었습니다.');
+        $sql_param = array();
+        if(!empty($name)) $sql_param['mem_name'] = $name;
+        else return $error_result;
+        return ok_result($this->signdao->sns_login_member($sql_param));
+    } // }}}
 }
