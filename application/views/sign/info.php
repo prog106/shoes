@@ -1,8 +1,7 @@
-    <div class="row">
     <form class="form-horizontal" id="user_form" onsubmit="return false;">
     <input type="hidden" name="mem" value="<?=$info['mem_srl']?>">
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10" style="left:50%;margin-left:-30px;">
+            <div class="col-sm-offset-2 col-sm-10" style="text-align:center">
                 <img src="<?=$info['mem_picture']?>" class="img-circle">
                 <!-- input type="file" name="picture" accept="image/jpg|gif|png" capture="camera" -->
             </div>
@@ -26,8 +25,15 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <h5><strong><?=strtoupper($info['mem_pwd'])?></strong><?=($info['mem_pwd']==='facebook')?"을":"를"?> 통해 가입(<?=$info['create_datetime']?>)하셨습니다.</h5>
+            <label for="regist" class="col-sm-2 control-label">가입일</label>
+            <div class="col-sm-10">
+                <?=$info['create_datetime']?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="from" class="col-sm-2 control-label">가입경로</label>
+            <div class="col-sm-10">
+                <?=strtoupper($info['mem_pwd'])?>
             </div>
         </div>
         <div class="form-group">
@@ -36,7 +42,6 @@
             </div>
         </div>
     </form>
-    </div>
 
 <script>
 $(document).ready(function() {

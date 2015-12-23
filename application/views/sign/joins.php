@@ -1,4 +1,3 @@
-    <div class="row">
     <form class="form-horizontal" id="joins_form" onsubmit="return false;">
     <input type="hidden" name="mem" value="<?=$sign['sign_srl']?>">
     <input type="hidden" name="from" value="<?=$sign['sign_type']?>">
@@ -37,7 +36,6 @@
             </div>
         </div>
     </form>
-    </div>
 
 <script>
 $(document).ready(function() {
