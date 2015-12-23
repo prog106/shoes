@@ -54,7 +54,6 @@ class Questiondao extends CI_Model {
         $this->db->where($sql_param);
         $this->db->order_by('likes DESC, respond DESC, que_srl DESC');
         $result = $this->db->get();
-        debug_log($this->db->last_query());
         return $result->result_array();
     } // }}}
 

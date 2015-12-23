@@ -326,7 +326,7 @@ class Sign extends CI_Controller {
         }
     } // }}}
 
-    // 로그인 정보 확인
+    // 정보 확인 & 수정
     public function info() { // {{{
         $member = $this->session->userdata('loginmember');
         if(empty($member)) redirect('/', 'refresh');
@@ -335,6 +335,7 @@ class Sign extends CI_Controller {
         if($result['result'] !== 'ok') redirect('/', 'refresh');
         $info = $result['data'];
         if(empty($info) || (!empty($info) && !in_array($info['status'], array('normal', 'manager')))) redirect('/', 'refresh');
+        $info['mem_email'] = $this->encryption->decrypt($info['mem_email']);
         $data['member'] = $member;
         $data['info'] = $info;
         load_view('sign/info', $data);
@@ -345,21 +346,26 @@ class Sign extends CI_Controller {
         $member = $this->session->userdata('loginmember');
         $mem_srl = $this->input->post('mem', true);
         $name = trim(strip_tags($this->input->post('mem_name', true)));
+        $mem_email = $this->input->post('mem_email', true);
         if($member['mem_srl'] !== $mem_srl) {
             echo json_encode(error_result('loginerror'));
             die;
         }
-        if($name === $member['mem_name']) {
-            echo json_encode(ok_result());
+        $this->load->helper('email');
+        if(!valid_email($mem_email)) {
+            echo json_encode(error_result('이메일 주소를 확인해 주세요.'));
             die;
+        } else {
+            $email = $this->encryption->encrypt($mem_email);
         }
         $picture = null;
         $this->load->model('biz/Signbiz', 'signbiz');
-        $result = $this->signbiz->update_member($mem_srl, $name, $picture);
+        $result = $this->signbiz->update_member($mem_srl, $name, $email);
         if($result['result'] === 'ok') {
             $mem_srl = $member['mem_srl'];
-            $mem_email = $member['mem_email'];
+            //$mem_email = $member['mem_email'];
             $level = $member['level'];
+            $picture = $member['mem_picture'];
             // 로그아웃 후 다시 로그인 처리
             $this->session->unset_userdata('loginmember');
             self::save_login($mem_srl, $mem_email, $name, $level, $picture);
@@ -374,19 +380,24 @@ class Sign extends CI_Controller {
         $member = $this->session->userdata('loginmember');
         $sign = $this->session->tempdata();
         if(!empty($member) || empty($sign)) {
-            echo json_encode(error_result('1'));
+            echo json_encode(error_result());
             die;
         }
         $efs_srl = $this->input->post('mem', true);
         $mem_type = $this->input->post('from', true);
-        $mem_email1 = $efs_srl.$mem_type;
+        $mem_email1 = $mem_type.$efs_srl;
         $mem_email2 = $mem_type;
         $mem_email = $this->input->post('mem_email', true);
         $mem_name = trim(strip_tags($this->input->post('mem_name', true)));
         $mem_pwd = $mem_type;
         $mem_picture = $this->input->post('picture', true);
         if($sign['sign_srl'] !== $efs_srl || $sign['sign_type'] !== $mem_type) {
-            echo json_encode(error_result('2'));
+            echo json_encode(error_result());
+            die;
+        }
+        $this->load->helper('email');
+        if(!valid_email($mem_email)) {
+            echo json_encode(error_result('이메일 주소를 확인해 주세요.'));
             die;
         }
         $this->load->model('biz/Signbiz', 'signbiz');
@@ -396,7 +407,7 @@ class Sign extends CI_Controller {
             echo json_encode(ok_result());
             die;
         }
-        echo json_encode(error_result('3'));
+        echo json_encode(error_result());
     } // }}}
 
     // 닉네임 중복체크

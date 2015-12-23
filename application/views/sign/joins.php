@@ -17,13 +17,13 @@
                         <button class="btn btn-default" type="button" id="nickcheck">중복체크</button>
                     </span>
                 </div>
-                <span id="nickcheckst" data-nickcheck="false">닉네임 중복체크 해주세요.</span>
+                <span id="nickcheckst">닉네임 중복체크 해주세요.</span>
             </div>
         </div>
         <div class="form-group">
             <label for="mem_email" class="col-sm-2 control-label">이메일(선택)</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="mem_email" name="mem_email" placeholder="이메일" value="<?=$sign['sign_email']?>">
+                <input type="email" class="form-control" id="mem_email" name="mem_email" placeholder="이메일" value="<?=$sign['sign_email']?>">
             </div>
         </div>
         <div class="form-group">
@@ -51,7 +51,7 @@ $(document).ready(function() {
         var data = {nickname:$('#mem_name').val()};
         ax_post(url, data, function(ret) {
             if(ret.result == 'ok') {
-                $('#nickcheckst').css('color', '').text('가입이 가능한 닉네임입니다.');
+                $('#nickcheckst').css('color', '').text('사용이 가능한 닉네임입니다.');
                 nickauth = true;
             } else {
                 $('#nickcheckst').css('color', 'crimson').text('이미 사용중인 닉네임입니다.');

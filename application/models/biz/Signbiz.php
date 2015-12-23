@@ -131,12 +131,13 @@ class Signbiz extends CI_Model {
     } // }}}
 
     // 회원 정보수정
-    public function update_member($mem_srl, $name, $picture=null) { // {{{
+    public function update_member($mem_srl, $name, $mem_email=null, $picture=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(empty($mem_srl)) return $error_result;
         if(!empty($name)) $sql_param['mem_name'] = $name;
         else return $error_result;
+        if(!empty($mem_email)) $sql_param['mem_email'] = $mem_email;
         if(!empty($picture)) $sql_param['mem_picture'] = $picture;
         return ok_result($this->signdao->sns_update_member($sql_param, $mem_srl));
     } // }}}
