@@ -16,11 +16,11 @@ foreach($list as $k => $v) {
                     <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$v['que_srl']?>"><?=$v['question']?></h4>
                     <span style="font-size:11px;">응답 <?=number_format($v['respond'])?> &nbsp; 좋아요 <span id="likecount<?=$v['que_srl']?>"><?=number_format($v['likes'])?></span></span>
 <?
-    if($v['mem_srl'] !== $member['mem_srl']) {
+    /*if($v['mem_srl'] !== $member['mem_srl']) {
 ?>
                     <a href="javascript:;" class="likethis" id="likethis<?=$v['que_srl']?>" data-question="<?=$v['que_srl']?>" data-status="<?=(empty($like[$v['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-heart" id="like<?=$v['que_srl']?>" style="font-size:20px;color:<?=(empty($like[$v['que_srl']]))?"gray":"darkorange"?>;"></span></a>
 <?
-    }
+    }*/
 ?>
                 </div>
             </div>

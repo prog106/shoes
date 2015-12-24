@@ -10,7 +10,7 @@
     <br>
     <a href="javascript:;" class="btn btn-lg btn-success btn-block" role="button" id="nologin">둘러보기</a>
 
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="/static/js/kakao.min.js"></script>
 <script>
 // 사용할 앱의 JavaScript 키를 설정해 주세요.
 Kakao.init('6c745ff7fa2422e6fe5ba3411fa5efcb');

@@ -66,7 +66,11 @@ class Question extends CI_Controller {
                 $result = $this->questionbiz->update_question($que_srl, $question, $member['mem_srl']);
             }
         } else {
-            $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
+            if($member['level'] === 'manager') {
+                $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture'], $main_start, $main_end, $start);
+            } else {
+                $result = $this->questionbiz->save_question($question, $member['mem_srl'], $member['mem_name'], $member['level'], $member['mem_picture']);
+            }
         }
         if($result['result'] == 'ok') {
             echo json_encode(ok_result());

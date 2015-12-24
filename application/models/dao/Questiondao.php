@@ -42,13 +42,14 @@ class Questiondao extends CI_Model {
         $this->db->from('question');
         $this->db->where($sql_param);
         if($order === 'recent') {
-            $this->db->order_by('start DESC, que_srl DESC');
+            $this->db->order_by('que_srl DESC');
         } else if($order === 'like') {
             $this->db->order_by('likes DESC, que_srl DESC');
         } else if($order === 'respond') {
             $this->db->order_by('respond DESC, que_srl DESC');
         } else {
-            $this->db->order_by('start DESC, likes DESC, respond DESC, que_srl DESC');
+            //$this->db->order_by('start DESC, likes DESC, respond DESC, que_srl DESC');
+            $this->db->order_by('que_srl DESC');
         }
         $this->db->limit($limit, $paging);
         $result = $this->db->get();

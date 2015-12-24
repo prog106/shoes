@@ -90,6 +90,43 @@ class Sign extends CI_Controller {
         $member = $this->session->userdata('loginmember');
         if(!empty($member)) close_reload();
 
+        echo "<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"utf-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>응답하라</title>
+    <script src=\"/static/js/jquery-1.11.3.min.js\"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel=\"stylesheet\" href=\"/static/css/bootstrap.min.css\">
+
+    <!-- Optional theme -->
+    <link rel=\"stylesheet\" href=\"/static/css/bootstrap-theme.min.css\">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src=\"/static/js/bootstrap.min.js\"></script>
+</head>
+<body>
+<div class=\"col-xs-12 col-sm-12 progress-container\">
+    <div class=\"progress progress-striped active\">
+        <div class=\"progress-bar progress-bar-success\" style=\"width:0%\"></div>
+    </div>
+</div>
+<h5>Facebook 접속중입니다... 잠시만 기다려 주세요...</h5>
+<script>
+function timeout() {
+    setTimeout(function () {
+        $(\".progress-bar\").animate({
+            width: \"+=50px\"
+        }, \"slow\");
+        timeout();
+    }, 800);
+}
+timeout();
+</script>
+</body>
+</html>";
+
         $this->load->library('facebook'); // Automatically picks appId and secret from config
         $user = $this->facebook->getUser();
         if ($user) {
