@@ -37,11 +37,19 @@ class Questiondao extends CI_Model {
     } // }}}
 
     // 전체 질문 리스트
-    public function get_question_list($sql_param, $paging, $limit) { // {{{
+    public function get_question_list($sql_param, $paging, $limit, $order=null) { // {{{
         $this->db->select('*');
         $this->db->from('question');
         $this->db->where($sql_param);
-        $this->db->order_by('start DESC, likes DESC, respond DESC, que_srl DESC');
+        if($order === 'recent') {
+            $this->db->order_by('start DESC, que_srl DESC');
+        } else if($order === 'like') {
+            $this->db->order_by('likes DESC, que_srl DESC');
+        } else if($order === 'respond') {
+            $this->db->order_by('respond DESC, que_srl DESC');
+        } else {
+            $this->db->order_by('start DESC, likes DESC, respond DESC, que_srl DESC');
+        }
         $this->db->limit($limit, $paging);
         $result = $this->db->get();
         return $result->result_array();

@@ -1,3 +1,4 @@
+<? $this->load->view('/lists/tbar', array('recent' => '', 'respond' => '', 'likes' => ''), 'true'); ?>
     <div class="row">
         <div class="col-sm-12">
 <?
@@ -12,7 +13,7 @@ foreach($list as $k => $v) {
                 <div class="media-body">
                     <span style="font-size:11px;line-height:25px;"><?=($v['mem_level'] !== 'manager')?$v['mem_name']:"Komment"?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$v['create_at']?></span>
-                    <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="<?=$v['que_srl']?>"><?=$v['question']?></h4>
+                    <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$v['que_srl']?>"><?=$v['question']?></h4>
                     <span style="font-size:11px;">응답 <?=number_format($v['respond'])?> &nbsp; 좋아요 <span id="likecount<?=$v['que_srl']?>"><?=number_format($v['likes'])?></span></span>
 <?
     if($v['mem_srl'] !== $member['mem_srl']) {
@@ -31,7 +32,7 @@ foreach($list as $k => $v) {
     </div>
 <script>
 $(document).ready(function() {
-    $('.link').click(function() { window.location.href='/answer/view/'+$(this).data('link'); });
+    $('.link').click(function() { window.location.href=$(this).data('link'); });
     function likes(que, already) {
         $('#like'+que).css('color', 'darkorange');
         $('#likethis'+que).data('status', true);

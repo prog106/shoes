@@ -111,11 +111,11 @@ class Question extends CI_Controller {
                 $list[] = $this->load->view('question/item', $v, true);
             }
         }
-        $list = array(
+        $lists = array(
             'recordsTotal' => count($result),
             'data' => $list,
         );
-        echo json_encode($list);
+        echo json_encode($lists);
     } // }}}
 
 }

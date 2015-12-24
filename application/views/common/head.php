@@ -25,5 +25,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script src="/static/js/jasny-bootstrap.min.js"></script>
     <script src="/static/js/iscroll.js"></script>
     <script src="/static/js/sp-slidemenu.js"></script>
+    <script src="/static/js/swiper.jquery.min.js"></script>
 </head>
 <body role="document">

@@ -42,7 +42,9 @@ if(!empty($member)) {
                 </a>
             </li>
             <li><a href="/question/">질문 올리기</a></li>
-            <li><a href="/lists/">다른 질문 보기</a></li>
+            <li><a href="/lists/recent">최신 질문 보기</a></li>
+            <li><a href="/lists/respond">인기 질문 보기</a></li>
+            <li><a href="/lists/like">관심 질문 보기</a></li>
             <!-- li><a href="javascript:alert('준비중');">[준비중] 내가 올린 질문</a></li -->
             <li><a href="javascript:;" id="logout">로그아웃</a></li>
 <?
@@ -62,5 +64,4 @@ if(!empty($member)) {
         <span class="button menu-button-left" style="cursor:pointer">
         </span>
     </header>
-    <div id="contents">
-        <div class="container theme-showcase" role="main">
+    <div class="container theme-showcase" role="main" style="padding-top:10px">
