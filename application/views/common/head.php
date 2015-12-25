@@ -14,6 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="/static/css/jasny-bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/common.css">
 

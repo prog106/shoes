@@ -11,7 +11,7 @@ if(!empty($member)) {
         ax_post(url, null, function(ret) {
             if(ret.result == 'ok') {
                 alert('로그아웃 되었습니다.');
-                self.location.reload();
+                window.location.href='/';
             } else {
                 alert(ret.msg);
             }

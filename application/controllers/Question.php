@@ -31,29 +31,11 @@ class Question extends CI_Controller {
         self::manager($member);
 
         $question = trim(strip_tags($this->input->post('question', true)));
-        $start_y = $this->input->post('start_y', true);
-        $start_m = $this->input->post('start_m', true);
-        $start_d = $this->input->post('start_d', true);
-        $start = $start_y."-".sprintf('%02d', $start_m)."-".sprintf('%02d', $start_d);
-        $main_start_y = $this->input->post('main_start_y', true);
-        $main_start_m = $this->input->post('main_start_m', true);
-        $main_start_d = $this->input->post('main_start_d', true);
-        $main_start = null;
-        if(!empty($main_start_y) && !empty($main_start_m) && !empty($main_start_d)) {
-            $main_start = $main_start_y."-".sprintf('%02d', $main_start_m)."-".sprintf('%02d', $main_start_d);
-        }
-        $main_end_y = $this->input->post('main_end_y', true);
-        $main_end_m = $this->input->post('main_end_m', true);
-        $main_end_d = $this->input->post('main_end_d', true);
-        $main_end = null;
-        if(!empty($main_end_y) && !empty($main_end_m) && !empty($main_end_d)) {
-            $main_end = $main_end_y."-".sprintf('%02d', $main_end_m)."-".sprintf('%02d', $main_end_d);
-        }
-        if(($main_start > $main_end) || (!empty($main_start) && empty($main_end)) || (empty($main_start) && !empty($main_end))) {
-            echo json_encode(error_result('메인 노출 날짜 에러'));
-            die;
-        }
-
+        $start = $this->input->post('start', true);
+        $main_start = $this->input->post('main_start', true);
+        if(!empty($main_start)) $main_start .= " 00:00:00";
+        $main_end = $this->input->post('main_end', true);
+        if(!empty($main_end)) $main_end .= " 23:59:59";
         $que_srl = $this->input->post('que_srl', true);
         if(empty($question)) {
             echo json_encode(error_result('질문을 입력하세요.'));
@@ -105,7 +87,7 @@ class Question extends CI_Controller {
         self::manager($member);
 
         $page = $this->input->post('page', true);
-        $result = $this->questionbiz->get_question_list($page, $member['mem_srl']);
+        $result = $this->questionbiz->get_question_list($page, $member['mem_srl'], null, null, $member['level']);
         $list = array();
         foreach($result as $k => $v) {
             $v['question'] = nl2br(strip_tags($v['question']));

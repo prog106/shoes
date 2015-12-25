@@ -65,12 +65,14 @@ class Questionbiz extends CI_Model {
     } // }}}
 
     // 전체 질문 가져오기
-    public function get_question_list($page=1, $mem_srl=null, $order=null, $limit=20) { // {{{
+    public function get_question_list($page=1, $mem_srl=null, $order=null, $limit=20, $mem_level='normal') { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(!empty($mem_srl)) $sql_param['mem_srl'] = $mem_srl;
         $sql_param['status'] = 'use';
-        $sql_param['start <= '] = date('Y-m-d');
+        if($mem_level === 'normal') {
+            $sql_param['start <= '] = date('Y-m-d');
+        }
         $paging = ($page-1)*$limit;
         return $this->questiondao->get_question_list($sql_param, $paging, $limit, $order);
     } // }}}
