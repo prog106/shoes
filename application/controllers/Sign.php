@@ -20,7 +20,7 @@ class Sign extends CI_Controller {
 	 */
     public function __construct() {
         parent::__construct();
-        $this->load->library('encryption');
+        $this->load->library(array('common','encryption', 'SnsLogin'));
         $this->load->helper('url');
         $this->load->model('biz/Emailforsignbiz', 'emailforsignbiz');
         $this->efs_hour = "2"; // 인증 가능 시간
@@ -88,8 +88,63 @@ class Sign extends CI_Controller {
     // facebook 회원가입 & 로그인
     public function facebooklogin() { // {{{
         $member = $this->session->userdata('loginmember');
-        if(!empty($member)) close_reload();
+        if(!empty($member)) {
+            redirect('/', 'refresh');
+            //close_reload();
+            die;
+        }
 
+        $this->load->library('facebook'); // Automatically picks appId and secret from config
+        $user = $this->facebook->getUser();
+        if ($user) {
+            try {
+                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,picture');
+            } catch (FacebookApiException $e) {
+                $user = null;
+            }
+        }else {
+        }
+
+        if ($user) {
+            $this->load->model('biz/Signbiz', 'signbiz');
+            $result = $this->signbiz->sns_login_member('facebook', $data['user_profile']['id']);
+            if($result['result'] === 'ok') {
+                $mem = $result['data'];
+                // 가입이 안되어 있으면 가입 처리
+                if(empty($mem)) {
+                    self::save_sign('facebook', $data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name'], $data['user_profile']['picture']['data']['url']); 
+                    redirect('/sign/joins', 'refresh');
+                    //close_reload('/sign/joins');
+                    die;
+                // 가입이 되어 있으면 로그인 처리
+                } else {
+                    if(in_array($mem['status'], array('normal', 'manager'))) {
+                        self::save_login($mem['mem_srl'], $this->encryption->decrypt($mem['mem_email']), $mem['mem_name'], $mem['status'], $mem['mem_picture']);
+                        redirect('/', 'refresh');
+                        //close_reload();
+                        die;
+                    } else {
+                        alertmsg_move('로그인을 할 수 없는 정보입니다.');
+                    }
+                }
+            } else {
+                alertmsg_move('로그인에 문제가 있습니다. 잠시후 다시 시도해 주세요.');
+            }
+            die;
+            /*// 회원가입 시킨다. facebook id, email, picture 
+            $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name'], $data['user_profile']['picture']['data']['url']);
+            if(!empty($mem) && $mem['result'] === 'ok') {
+                $mem_srl = $mem['data']['mem_srl'];
+                $level = $mem['data']['level'];
+                $picture = $mem['data']['mem_picture'];
+                self::save_sign($mem_srl, $data['user_profile']['email'], $data['user_profile']['name'], $level, $picture);
+                close_reload();
+            } else {
+                alertmsg_move('로그인을 실패하였습니다.');
+            }
+            die;
+            $data['logout_url'] = site_url('sign/logout'); // Logs off application*/
+        } else {
         echo "<!DOCTYPE html>
 <html lang=\"en\">
 <head>
@@ -117,7 +172,7 @@ class Sign extends CI_Controller {
 function timeout() {
     setTimeout(function () {
         $(\".progress-bar\").animate({
-            width: \"+=50px\"
+            width: \"+=5%\"
         }, \"slow\");
         timeout();
     }, 800);
@@ -126,54 +181,6 @@ timeout();
 </script>
 </body>
 </html>";
-
-        $this->load->library('facebook'); // Automatically picks appId and secret from config
-        $user = $this->facebook->getUser();
-        if ($user) {
-            try {
-                $data['user_profile'] = $this->facebook->api('/me?fields=name,email,picture');
-            } catch (FacebookApiException $e) {
-                $user = null;
-            }
-        }else {
-        }
-
-        if ($user) {
-            $this->load->model('biz/Signbiz', 'signbiz');
-            $result = $this->signbiz->sns_login_member('facebook', $data['user_profile']['id']);
-            if($result['result'] === 'ok') {
-                $mem = $result['data'];
-                // 가입이 안되어 있으면 가입 처리
-                if(empty($mem)) {
-                    self::save_sign('facebook', $data['user_profile']['id'], $data['user_profile']['email'], $data['user_profile']['name'], $data['user_profile']['picture']['data']['url']); 
-                    close_reload('/sign/joins');
-                // 가입이 되어 있으면 로그인 처리
-                } else {
-                    if(in_array($mem['status'], array('normal', 'manager'))) {
-                        self::save_login($mem['mem_srl'], $this->encryption->decrypt($mem['mem_email']), $mem['mem_name'], $mem['status'], $mem['mem_picture']);
-                        close_reload();
-                    } else {
-                        alertmsg_move('로그인을 할 수 없는 정보입니다.');
-                    }
-                }
-            } else {
-                alertmsg_move('로그인에 문제가 있습니다. 잠시후 다시 시도해 주세요.');
-            }
-            die;
-            /*// 회원가입 시킨다. facebook id, email, picture 
-            $mem = $this->signbiz->sns_member('facebook', $data['user_profile']['id'], $this->encryption->encrypt($data['user_profile']['email']), $data['user_profile']['name'], $data['user_profile']['picture']['data']['url']);
-            if(!empty($mem) && $mem['result'] === 'ok') {
-                $mem_srl = $mem['data']['mem_srl'];
-                $level = $mem['data']['level'];
-                $picture = $mem['data']['mem_picture'];
-                self::save_sign($mem_srl, $data['user_profile']['email'], $data['user_profile']['name'], $level, $picture);
-                close_reload();
-            } else {
-                alertmsg_move('로그인을 실패하였습니다.');
-            }
-            die;
-            $data['logout_url'] = site_url('sign/logout'); // Logs off application*/
-        } else {
             $data['login_url'] = $this->facebook->getLoginUrl(array(
                 'redirect_uri' => 'http://shoes.prog106.indoproc.xyz/sign/facebooklogin', 
                 'scope' => array('user_birthday,public_profile,email'), // permissions here
@@ -183,7 +190,84 @@ timeout();
     } // }}}
 
     // 카카오 회원가입 & 로그인
-    public function ax_set_kakao() { // {{{
+    public function kakaologin() { // {{{
+        $member = $this->session->userdata('loginmember');
+        if(!empty($member)) {
+            redirect('/', 'refresh');
+            //close_reload();
+            die;
+        }
+        if (isset($_GET['code'])) {
+
+            require_once realpath(dirname(__FILE__).'/../libraries/SNS_OAuth/').'/kakao_oauth.php';
+
+            $url = "https://kauth.kakao.com/oauth/token";
+            
+            $param = "grant_type=authorization_code";
+            $param .= "&client_id=".$kakao_api;
+            $param .= "&redirect_url=".$kakao_redirect;
+            $param .= "&code=".$_GET['code'];
+
+            // Get Aeccess Token Value
+            $auth_data = $this->common->restful_curl($url, $param, 'POST');
+            $auth_data = json_decode($auth_data);
+
+            if($auth_data->access_token) {
+
+                $_SESSION['kakao_token'] = $auth_data->access_token;
+                
+                $url = "https://kapi.kakao.com/v1/user/me";
+                $param = "";
+                $header = array("Authorization: Bearer " .$auth_data->access_token);
+
+
+                // Get User Info
+                $user_data = $this->common->restful_curl($url, $param, 'POST', $header);
+                $user_data = json_decode($user_data);
+                $properties = $user_data->properties;
+
+                $kakao_id = $user_data->id;
+                $kakao_nickname = $properties->nickname;
+                $kakao_picture = $properties->thumbnail_image;
+
+                if(!empty($kakao_id) && !empty($kakao_nickname)) {
+                    $this->load->model('biz/Signbiz', 'signbiz');
+                    $result = $this->signbiz->sns_login_member('kakao', $kakao_id);
+                    if($result['result'] === 'ok') {
+                        $mem = $result['data'];
+                        // 가입이 안되어 있으면 가입 처리
+                        if(empty($mem)) {
+                            self::save_sign('kakao', $kakao_id, '', $kakao_nickname, $kakao_picture, $auth_data->access_token); 
+                            redirect('/sign/login', 'refresh');
+                            //echo json_encode(error_result('joins'));
+                        // 가입이 되어 있으면 로그인 처리
+                        } else {
+                            if(in_array($mem['status'], array('normal', 'manager'))) {
+                                self::save_login($mem['mem_srl'], $this->encryption->decrypt($mem['mem_email']), $mem['mem_name'], $mem['status'], $mem['mem_picture'], $auth_data->access_token);
+                                redirect('/', 'refresh');
+                                //echo json_encode(ok_result());
+                            } else {
+                                redirect('/sign/login', 'refresh');
+                                //echo json_encode(error_result('로그인을 할 수 없는 정보입니다.'));
+                            }
+                        }
+                    } else {
+                        redirect('/sign/login', 'refresh');
+                        //echo json_encode(error_result());
+                    }
+                }
+
+            }else {
+                redirect('/sign/login', 'refresh');
+            }
+
+        }else {
+            redirect('/sign/login', 'refresh');
+        } 
+    } // }}}
+
+    // 카카오 회원가입 & 로그인
+    /*public function ax_set_kakao() { // {{{
         $kakao_id = $this->input->post('id', true);
         $kakao_nickname = $this->input->post('name', true);
         $kakao_picture = $this->input->post('picture', true);
@@ -209,23 +293,10 @@ timeout();
                 echo json_encode(error_result());
             }
             die;
-            /*// 회원가입 시킨다. kakao id, name
-            $this->load->model('biz/Signbiz', 'signbiz');
-            $mem = $this->signbiz->sns_member('kakao', $kakao_id, $this->encryption->encrypt($kakao_id."@kakao"), $kakao_nickname, $kakao_picture);
-            if(!empty($mem) && $mem['result'] === 'ok') {
-                $mem_srl = $mem['data']['mem_srl'];
-                $level = $mem['data']['level'];
-                $picture = $mem['data']['mem_picture'];
-                self::save_login($mem_srl, $kakao_id.'@kakao', $kakao_nickname, $level, $picture);
-                echo json_encode(ok_result());
-            } else {
-                alertmsg_move('로그인을 실패하였습니다.');
-            }
-            die;*/
         }
         echo json_encode(error_result());
         die;
-    } // }}}
+    } // }}}*/
 
     // 회원가입
     public function ax_set_sign() { // {{{
@@ -349,7 +420,7 @@ timeout();
     } // }}}
 
     // 로그인 세션 저장
-    private function save_login($srl, $email, $name, $level, $picture=null) { // {{{
+    private function save_login($srl, $email, $name, $level, $picture=null, $access_token=null) { // {{{
         if($srl > 0) {
             // 로그인 성공
             $loginmember = array(
@@ -358,6 +429,7 @@ timeout();
                 'mem_name' => $name,
                 'mem_picture' => $picture,
                 'level' => $level,
+                'token' => $access_token,
             );
             $this->session->set_userdata('loginmember', $loginmember);
         }

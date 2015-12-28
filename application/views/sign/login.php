@@ -4,14 +4,15 @@
     비밀번호 <input type="password" name="pwd" value="" maxlength="20" id="pwd"><br>
     <button type="button" id="login">로그인</button>
     </form -->
-    <a href="javascript:;" onclick="facebooklogin()" class="btn btn-lg btn-primary btn-block" role="button">Facebook Login</a>
+    <a href="/sign/facebooklogin" class="btn btn-lg btn-primary btn-block" role="button">Facebook Login</a>
     <br>
-    <a href="javascript:;" onclick="kakaologin()" class="btn btn-lg btn-warning btn-block" role="button" id="custom-login-btn">Kakao Login</a>
+    <a href="https://kauth.kakao.com/oauth/authorize?client_id=6659ded339e34f9bcc811e56f4a955aa&redirect_uri=http://shoes.prog106.indoproc.xyz/sign/kakaologin&response_type=code" class="btn btn-lg btn-warning btn-block" role="button" id="custom-login-btn">Kakao Login</a>
     <br>
     <a href="javascript:;" class="btn btn-lg btn-success btn-block" role="button" id="nologin">둘러보기</a>
 
 <script src="/static/js/kakao.min.js"></script>
 <script>
+<?/*
 // 사용할 앱의 JavaScript 키를 설정해 주세요.
 Kakao.init('6c745ff7fa2422e6fe5ba3411fa5efcb');
 function kakaologin() {
@@ -45,6 +46,7 @@ function kakaologin() {
         }
     });
 }
+*/?>
 $(document).ready(function() {
     $('#nologin').click(function() {
         var url = '/sign/ax_set_nologin';
@@ -70,18 +72,9 @@ $(document).ready(function() {
             }
         });
     });
-    $('#logout').click(function() {
-        var url = '/sign/ax_get_logout';
-        ax_post(url, null, function(ret) {
-            if(ret.result == 'ok') {
-                self.location.reload();
-            } else {
-                alert(ret.msg);
-            }
-        });
-    });
 });
+<?/*
 function facebooklogin() {
     window.open('http://shoes.prog106.indoproc.xyz/sign/facebooklogin', 'facebook', 'width=600, height=600');
-}
+}*/?>
 </script>

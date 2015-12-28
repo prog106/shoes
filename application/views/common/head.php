@@ -6,6 +6,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?
+if(!empty($question)) {
+?>
+    <meta property="og:title" content="<?=$question['question']?>" />
+    <meta property="og:url" content="http://shoes.prog106.indoproc.xyz<?=$this->input->server('REQUEST_URI', true)?>" />
+    <meta property="og:image" content="http://shoes.prog106.indoproc.xyz/static/img/komment.png" />
+<?
+}
+?>
 	<title>응답하라</title>
     <script src="/static/js/jquery-1.11.3.min.js"></script>
     <script src="/static/js/shoes.util.js"></script>

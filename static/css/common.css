@@ -4,6 +4,8 @@ nav ul {
     list-style:none;
 }
 
+#main #header span:hover { display:block;color:chocolate; }
+
 /*header*/
 #header {
     background: #f1f1f1;
@@ -46,6 +48,9 @@ nav ul {
     display: block;
     text-decoration: none;
     color: #000;
+}
+.slidemenu li a:hover {
+    color:chocolate;
 }
 .slidemenu li:first-child {
     border-top: none;

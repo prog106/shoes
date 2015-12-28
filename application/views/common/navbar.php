@@ -1,29 +1,3 @@
-<script>
-$(document).ready(function() {
-<?
-if(!empty($member)) {
-?>
-    $('#logout').click(function() {
-        if(!confirm('로그아웃 하시겠습니까?')) {
-            return false;
-        }
-        var url = '/sign/ax_get_logout';
-        ax_post(url, null, function(ret) {
-            if(ret.result == 'ok') {
-                alert('로그아웃 되었습니다.');
-                window.location.href='/';
-            } else {
-                alert(ret.msg);
-            }
-        });
-    });
-<?
-}
-?>
-    var menu = SpSlidemenu('#main', '.slidemenu-left', '.menu-button-left', {direction: 'left'});
-    $('#gohome').click(function() { window.location.href='/'; });
-});
-</script>
 <div class="slidemenu slidemenu-left">
     <div class="slidemenu-header">
         <div>
@@ -50,7 +24,7 @@ if(!empty($member)) {
 <?
 } else {
 ?>
-            <li><a href="/lists/">다른 질문 보기</a></li>
+            <li><a href="/">다른 질문 보기</a></li>
             <li><a href="/sign/login/">로그인</a></li>
 <?
 }
@@ -58,10 +32,66 @@ if(!empty($member)) {
         </ul>
     </div>
 </div>
+<script src="/static/js/kakao.min.js"></script>
+<script>
+$(document).ready(function() {
+<?
+if(!empty($member)) {
+?>
+    $('#logout').click(function() {
+        if(!confirm('로그아웃 하시겠습니까?')) {
+            return false;
+        }
+        var url = '/sign/ax_get_logout';
+        ax_post(url, null, function(ret) {
+            if(ret.result == 'ok') {
+                alert('로그아웃 되었습니다.');
+                window.location.href='/';
+            } else {
+                alert(ret.msg);
+            }
+        });
+    });
+<?
+}
+?>
+    var menu = SpSlidemenu('#main', '.slidemenu-left', '.menu-button-left', {direction: 'left'});
+    $('#gohome').click(function() { window.location.href='/'; });
+});
+// 사용할 앱의 JavaScript 키를 설정해 주세요.
+Kakao.init('6c745ff7fa2422e6fe5ba3411fa5efcb');
+function kakaotalk(txt) {
+    Kakao.Link.sendTalkLink({
+        label : "코멘트" ,
+        image: {
+            src: 'http://shoes.prog106.indoproc.xyz/static/image/komment.png',
+            width: '145',
+            height: '190'
+        },
+        webLink : {
+            text: txt, 
+            url: 'http://shoes.prog106.indoproc.xyz<?=$this->input->server('REQUEST_URI', true);?>' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+        }
+    });
+}
+function kakaostory() {
+    var win = window.open('http://story.kakao.com/share?url=http://shoes.prog106.indoproc.xyz<?=$this->input->server('REQUEST_URI', true);?>','kakaostory','width=550px,height=440px');
+    if(win) { win.focus(); }
+}
+function facebook() {
+    var win = window.open('http://www.facebook.com/sharer/sharer.php?u=http://shoes.prog106.indoproc.xyz<?=$this->input->server('REQUEST_URI', true);?>','facebook','width=550px,height=440px');
+    if(win) { win.focus(); }
+}
+$(function() {
+    $('#kakaotalk').click(function() { kakaotalk($(this).data('txt')); });
+    $('#kakaostory').click(function() { kakaostory(); });
+    $('#facebook').click(function() { facebook(); });
+});
+</script>
 <div id="main">
     <header id="header">
         <span style="font-size:20px;margin-top:9px;position:absolute;top:0;left:50%;margin-left:-30px;padding:6px 5px;cursor:pointer;" id="gohome">코멘트</span>
-        <span class="button menu-button-left" style="cursor:pointer">
-        </span>
+        <span class="button menu-button-left" style="cursor:pointer"></span>
+        <span class="button" onclick="history.back();" style="cursor:pointer;right:0px;border-left:1px solid #ddd;background-image:url('');font-size:25px;line-height:55px;padding-left:10px;"><span class="glyphicon glyphicon-arrow-left" style="color:#666"></span></span>
     </header>
     <div class="container theme-showcase" role="main" style="padding-top:10px">

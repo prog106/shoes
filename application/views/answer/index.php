@@ -21,6 +21,14 @@ if($question['mem_srl'] !== $member['mem_srl']) {
                     <!-- a href="javascript:;" id="answer_area_view" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-comment" style="font-size:20px;color:mediumorchid;"></span></a -->
                 </div>
             </div>
+        </div>
+        <div class="col-sm-12" style="margin-top:5px">
+            <div class="input-group" style="left:45px;">
+                <a id="kakaotalk" href="javascript:;" data-txt="<?=$question['question']?>"><img src="/static/image/kakao.jpg" style="width:40px;margin:3px;"></a>
+                <a id="kakaostory" href="javascript:;" data-txt="<?=$question['question']?>"><img src="/static/image/kakaostory.png" style="width:37px;height:37px;margin:3px;"></a>
+                <a id="facebook" href="javascript:;" data-txt="<?=$question['question']?>"><img src="http://ttolo.kr/static/img/fb.jpg" style="width:36px;height:36px;margin:3px;"></a>
+                
+            </div>
             <hr style="margin-top:15px;margin-bottom:10px">
         </div>
         <div class="col-sm-12">
