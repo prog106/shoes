@@ -27,6 +27,9 @@ $(document).ready(function() {
                     html += data;
                 }
                 $('#recent_list').append(html);
+                if(d.recordsTotal < 20) {
+                    $('#more').hide();
+                }
             } else {
                 $('#more').hide();
             }

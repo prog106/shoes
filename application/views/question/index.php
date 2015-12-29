@@ -180,6 +180,9 @@ function get_question_list(page_val){
 */?>
             }
             $('#question_list tbody').append(html);
+            if(d.recordsTotal < 20) {
+                $('#more').hide();
+            }
         } else {
             $('#more').hide();
         }

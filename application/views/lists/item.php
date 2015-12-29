@@ -7,7 +7,7 @@
                 <div class="media-body">
                     <span style="font-size:11px;line-height:25px;"><?=($mem_level !== 'manager')?$mem_name:"Komment"?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$create_at?></span>
-                    <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$que_srl?>"><?=$question?></h4>
+                    <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$que_srl?>"><?=nl2br(strip_tags($question))?></h4>
                     <span style="font-size:11px;">응답 <?=number_format($respond)?> &nbsp; 좋아요 <span id="likecount<?=$que_srl?>"><?=number_format($likes)?></span></span>
 <?
 /* // 요거는 아직 미해결 - 안나오게 하는 것도 나쁘지 않은듯

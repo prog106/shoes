@@ -3,13 +3,13 @@
             <div class="media">
                 <div class="media-left" style="padding-top:5px;">
                     <a href="#">
-                        <img class="media-object" src="<?=(!empty($question['mem_picture'] && $question['mem_level'] !== 'manager')?$question['mem_picture']:"/static/image/komment.png")?>" width="35">
+                        <img class="media-object" src="<?=(!empty($question['mem_picture'] && $question['mem_level'] !== 'manager')?$question['mem_picture']:"/static/image/komment.png")?>">
                     </a>
                 </div>
                 <div class="media-body">
                     <span style="font-size:11px;line-height:25px;"><?=($question['mem_level'] !== 'manager')?$question['mem_name']:"Komment"?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$question['create_at']?></span>
-                    <h4 class="media-heading" style="line-height:25px;"><?=$question['question']?></h4>
+                    <h4 class="media-heading" style="line-height:25px;"><?=nl2br(strip_tags($question['question']))?></h4>
                     <span style="font-size:11px;">응답 <span id="respond"><?=number_format($question['respond'])?></span> &nbsp; 좋아요 <span id="likecount<?=$question['que_srl']?>"><?=number_format($question['likes'])?></span></span>
 <?
 if($question['mem_srl'] !== $member['mem_srl']) {
@@ -24,9 +24,9 @@ if($question['mem_srl'] !== $member['mem_srl']) {
         </div>
         <div class="col-sm-12" style="margin-top:5px">
             <div class="input-group" style="left:45px;">
-                <a id="kakaotalk" href="javascript:;" data-txt="<?=$question['question']?>"><img src="/static/image/kakao.jpg" style="width:40px;margin:3px;"></a>
-                <a id="kakaostory" href="javascript:;" data-txt="<?=$question['question']?>"><img src="/static/image/kakaostory.png" style="width:37px;height:37px;margin:3px;"></a>
-                <a id="facebook" href="javascript:;" data-txt="<?=$question['question']?>"><img src="http://ttolo.kr/static/img/fb.jpg" style="width:36px;height:36px;margin:3px;"></a>
+                <a id="kakaotalk" href="javascript:;" data-txt="<?=nl2br(strip_tags($question['question']))?>"><img src="/static/image/kakao.png" style="margin:3px;"></a>
+                <a id="kakaostory" href="javascript:;" data-txt="<?=nl2br(strip_tags($question['question']))?>"><img src="/static/image/kakaostory.png" style="margin:3px;"></a>
+                <a id="facebook" href="javascript:;" data-txt="<?=nl2br(strip_tags($question['question']))?>"><img src="http://ttolo.kr/static/img/fb.jpg" style="margin:3px;"></a>
                 
             </div>
             <hr style="margin-top:15px;margin-bottom:10px">
@@ -148,6 +148,9 @@ $(document).ready(function(){
                     html += '</li>';
                 }
                 $('#answer_list').append(html);
+                if(d.recordsTotal < 20) {
+                    $('#more').hide();
+                }
             } else {
                 $('#more').hide();
             }

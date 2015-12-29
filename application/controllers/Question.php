@@ -87,10 +87,10 @@ class Question extends CI_Controller {
         self::manager($member);
 
         $page = $this->input->post('page', true);
-        $result = $this->questionbiz->get_question_list($page, $member['mem_srl'], null, null, $member['level']);
+        $result = $this->questionbiz->get_question_list($page, $member['mem_srl'], null, '20', $member['level']);
         $list = array();
         foreach($result as $k => $v) {
-            $v['question'] = nl2br(strip_tags($v['question']));
+            //$v['question'] = nl2br(strip_tags($v['question']));
             if($member['level'] === 'manager') {
                 $list[] = $this->load->view('question/mitem', $v, true);
             } else {
