@@ -105,4 +105,7 @@ class Answer extends CI_Controller {
         echo json_encode(error_result());
     } // }}}
 
+    public function reply() { // {{{
+        alertmsg_move('준비중입니다.');
+    } // }}}
 }

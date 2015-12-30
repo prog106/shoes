@@ -2,9 +2,11 @@
 if($tps === 'answer') {
     $mem_picture = (!empty($mem_picture)?$mem_picture:"/static/image/komment.png");
     $mem_name = $mem_name;
+    $title = "[댓글]";
 } else {
     $mem_picture = (!empty($mem_picture && $mem_level !== 'manager')?$mem_picture:"/static/image/komment.png");
     $mem_name = ($mem_level !== 'manager')?$mem_name:"Komment";
+    $title = "[질문]";
 }
 ?>
             <div class="media">
@@ -14,7 +16,7 @@ if($tps === 'answer') {
                     </a>
                 </div>
                 <div class="media-body">
-                    <span style="font-size:11px;line-height:25px;"><?=$mem_name?></span>
+                    <span style="font-size:11px;line-height:25px;"><?=$title?> <?=$mem_name?></span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;"><?=$create_at?></span>
                     <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$que_srl?>"><?=convert_hashtag($question)?></h4>
                     <span style="font-size:11px;">좋아요 <span id="likecount<?=$que_srl?>"><?=number_format($likes)?></span></span>
@@ -28,5 +30,5 @@ if($tps === 'answer') {
         */
 ?>
                 </div>
-                <hr style="margin-top:15px;margin-bottom:10px">
+                <hr style="margin-top:5px;margin-bottom:0px">
             </div>

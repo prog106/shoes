@@ -9,7 +9,7 @@ if(!empty($la_srl)) {
             <div class="media" style="margin-top:5px;">
                 <div class="media-left" style="padding-top:5px;">
                     <a href="#">
-                        <img class="media-object" src="<?=(!empty($mem_picture && $mem_level !== 'manager')?$mem_picture:"/static/image/komment.png")?>" style="width:30px;height:30px;">
+                        <img class="media-object" src="<?=(!empty($mem_picture)?$mem_picture:"/static/image/komment.png")?>" style="width:30px;height:30px;">
                     </a>
                 </div>
                 <div class="media-body">
@@ -26,7 +26,7 @@ if(!empty($me)) {
                     </span>
                     <span style="font-size:11px;float:right;margin-right:20px;margin-top:5px;color:#555;"><?=$create_at?></span>
                     <h5 class="media-heading" style="line-height:18px;"><?=convert_hashtag($answer)?></h5>
-                    <span class="link" data-link="/answer/reply/<?=$ans_srl?>" style="font-size:11px;cursor:pointer;"><span class="glyphicon glyphicon-leaf"></span> 댓글에 답변달기</span>
+                    <span class="links" onclick="alert('준비중입니다.')" data-link="/answer/reply/<?=$ans_srl?>" style="font-size:11px;cursor:pointer;"><span class="glyphicon glyphicon-leaf"></span> 댓글에 답변달기</span>
 <?
 if(empty($me)) {
 ?>
