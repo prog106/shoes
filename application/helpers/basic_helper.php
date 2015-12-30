@@ -383,7 +383,7 @@ if(!function_exists('translate_status')) {
 if(!function_exists('convert_hashtag')) {
     function convert_hashtag($text='', $nl2br=true){ // {{{
         $text = convert_text($text, $nl2br);
-        $regex = "/#([가-힝a-zA-Z0-9_]+)/";
+        $regex = "/#([가-힝a-zA-Z0-9_]{2,}+)/";
         $str = preg_replace($regex, '<a href="/search/hashtag/$1">$0</a>', $text);
         return $str;
     } // }}}
@@ -396,22 +396,36 @@ if(!function_exists('convert_text')) {
         } else {
             $str = strip_tags($text);
         }
-        return $str;
+        return autolink($str);
     } // }}}
 }
 
 if(!function_exists('hashtag')) {
     function hashtag($text='', $nl2br=true){ // {{{
         $text = convert_text($text, $nl2br);
-        $regex = "/#([가-힝a-zA-Z0-9_]+)/";
+        $regex = "/#([가-힝a-zA-Z0-9_]{2,}+)/";
         $word = array();
         preg_match_all($regex, $text, $word);
         $str = null;
         if(!empty($word[1])) {
-            $str = implode(",", $word[1]); // a,b,c
+            $str = implode(" ", $word[1]); // a b c
             //$str = implode(" ", $word[0]); // #a #b #c
             //$str = preg_replace($regex, '<a href="hashtag#$1">$0</a>', $str);
         }
         return $str;
+    } // }}}
+}
+
+if(!function_exists('autolink')) {
+    function autolink($text) { // {{{
+    // http  
+    $text = preg_replace("/http:\/\/([0-9a-z-.\/@~?&=_]+)/i", "<a href=\"http://\\1\" target='_blank'>http://\\1</a>", $text);
+    // https  
+    $text = preg_replace("/https:\/\/([0-9a-z-.\/@~?&=_]+)/i", "<a href=\"http://\\1\" target='_blank'>http://\\1</a>", $text);
+    // ftp  
+    //$text = preg_replace("/ftp:\/\/([0-9a-z-.\/@~?&=_]+)/i", "<a href=\"ftp://\\1\" target='_blank'>ftp://\\1</a>", $text);
+    // email 
+    //$text = preg_replace("/([_0-9a-z-]+(\.[_0-9a-z-]+)*)@([0-9a-z-]+(\.[0-9a-z-]+)*)/i", "<a href=\"mailto:\\1@\\3\">\\1@\\3</a>", $text);
+    return $text;
     } // }}}
 }

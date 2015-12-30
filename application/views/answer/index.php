@@ -14,7 +14,7 @@
 <?
 if($question['mem_srl'] !== $member['mem_srl']) {
 ?>
-                    <a href="javascript:;" class="likethis" id="likethis<?=$question['que_srl']?>" data-question="<?=$question['que_srl']?>" data-status="<?=(empty($like[$question['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-heart" id="like<?=$question['que_srl']?>" style="font-size:20px;color:<?=(empty($like[$question['que_srl']]))?"gray":"darkorange"?>;"></span></a>
+                    <a href="javascript:;" class="likethis" id="likethis<?=$question['que_srl']?>" data-question="<?=$question['que_srl']?>" data-status="<?=(empty($like[$question['que_srl']]))?"false":"true"?>" style="float:right;margin-right:25px;"><span class="glyphicon glyphicon-thumbs-up" id="like<?=$question['que_srl']?>" style="font-size:22px;color:<?=(empty($like[$question['que_srl']]))?"gray":"darkorange"?>;"></span></a>
 <?
 }
 ?>
@@ -24,7 +24,7 @@ if($question['mem_srl'] !== $member['mem_srl']) {
         </div>
         <div class="col-sm-12" style="margin-top:5px">
             <div class="input-group" style="left:45px;">
-                <a id="kakaotalk" href="javascript:;" data-txt="<?=convert_text($question['question'], false)?>"><img src="/static/image/kakao.png" style="margin:3px;border-radius:5px"></a>
+                <a id="kakaotalk" href="javascript:;" data-txt="<?=htmlspecialchars(convert_text($question['question'], false))?>"><img src="/static/image/kakao.png" style="margin:3px;border-radius:5px"></a>
                 <a id="kakaostory" href="javascript:;"><img src="/static/image/kakaostory.png" style="margin:3px;border-radius:5px"></a>
                 <a id="facebook" href="javascript:;"><img src="http://ttolo.kr/static/img/fb.jpg" style="margin:3px;border-radius:5px"></a>
                 
@@ -36,16 +36,18 @@ if($question['mem_srl'] !== $member['mem_srl']) {
         <input type="hidden" name="question" id="question" value="<?=$question['que_srl']?>">
             <div class="input-group">
                 <!-- label for="answer">응답하라</label -->
-                <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="<?=(empty($member))?"로그인 후 이용해 주세요.":"응답해 주세요!"?>"<?=(empty($member))?" READONLY":""?>></textarea>
+                <input type="text" class="form-control" name="answer" id="answer" maxlength="200" placeholder="<?=(empty($member))?"로그인 후 이용해 주세요.":"댓글을 남겨주세요"?>"<?=(empty($member))?" READONLY":""?>></textarea>
                 <span class="input-group-btn">
-                    <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>응답한다!</button>
+                    <button type="button" id="regist" class="btn btn-default"<?=(empty($member))?" disabled=\"disabled\"":"";?>>남기기</button>
                 </span>
             </div>
         </form>
         </div>
+        <div class="col-sm-12" id="answer_list">
+        </div>
     </div>
-    <ul class="list-group" data-role="listview" data-inset="true" id="answer_list" style="margin-top:15px;">
-    </ul>
+    <!-- ul class="list-group" data-role="listview" data-inset="true" id="answer_list" style="margin-top:15px;">
+    </ul -->
     <button type="button" id="more" class="glyphicon glyphicon-chevron-down btn btn-default btn-sm" style="width:100%"> 더보기</button>
 <script type="text/javascript">
 var page_num = 1;
@@ -128,6 +130,8 @@ $(document).ready(function(){
                 var html = '';
                 for(var i = 0 ; i < len ; i++){
                     var data = d.data[i];
+                    html += data;
+<?/*
                     var like_color = 'gray';
                     var st = 'like';
                     if(data.la_srl) {
@@ -146,6 +150,7 @@ $(document).ready(function(){
                     //html += data.ans_srl;
                     html += '<br>'+data.answer;
                     html += '</li>';
+*/?>
                 }
                 $('#answer_list').append(html);
                 if(d.recordsTotal < 20) {
@@ -154,6 +159,7 @@ $(document).ready(function(){
             } else {
                 $('#more').hide();
             }
+            $('.link').click(function() { window.location.href=$(this).data('link'); });
             $('.delthis').click(function() {
                 if(confirm('댓글을 정말 삭제하시겠어요?')) {
                     var ans = $(this).data('ans');
@@ -161,7 +167,7 @@ $(document).ready(function(){
                     var data = {answer:ans}
                     ax_post(url, data, function(ret) {
                         if(ret.result == 'ok') {
-                            $('#delthis'+ans).parent('li').remove();
+                            $('#delthis'+ans).closest('.media').remove();
                             $('#respond').text(parseInt($('#respond').text() - 1));
                             alert('삭제되었습니다.');
                         } else {

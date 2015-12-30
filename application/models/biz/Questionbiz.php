@@ -33,7 +33,6 @@ class Questionbiz extends CI_Model {
         if(!empty($main_start)) $sql_param['main_start'] = $main_start;
         if(!empty($main_end)) $sql_param['main_end'] = $main_end;
         $sql_param['create_at'] = YMD_HIS;
-        debug_log($sql_param);
         return ok_result($this->questiondao->save_question($sql_param));
     } // }}}
 

@@ -50,12 +50,13 @@ class Answer extends CI_Controller {
         self::manager($member);
 
         $que_srl = $this->input->post('question', true);
-        $answer = $this->input->post('answer', true);
+        $answer = trim(strip_tags($this->input->post('answer', true)));
         if(empty($answer)) {
             echo json_encode(error_result());
             die;
         }
-        $result = $this->answerbiz->answer($answer, $member['mem_srl'], $member['level'], $que_srl);
+        $hashtag = hashtag($answer);
+        $result = $this->answerbiz->answer($answer, $hashtag, $member['mem_srl'], $member['level'], $member['mem_picture'], $que_srl);
         if($result['result'] == 'ok') {
             echo json_encode(ok_result());
             die;
@@ -71,16 +72,19 @@ class Answer extends CI_Controller {
         $que_srl = $this->input->post('question', true);
         $page = $this->input->post('page', true);
         $result = $this->answerbiz->get_answer_list($page, $que_srl, $mem_srl);
+        $list = array();
         if($mem_srl > 0) {
             foreach($result as $k => $v) {
-                $result[$k]['me'] = ($v['mem_srl'] === $mem_srl)?true:false;
+                //$result[$k]['me'] = ($v['mem_srl'] === $mem_srl)?true:false;
+                $v['me'] = ($v['mem_srl'] === $mem_srl)?true:false;
+                $list[] = $this->load->view('answer/item', $v, true);
             }
         }
-        $list = array(
+        $lists = array(
             'recordsTotal' => count($result),
-            'data' => $result,
+            'data' => $list,
         );
-        echo json_encode($list);
+        echo json_encode($lists);
     } // }}}
 
     // 답글 지우기

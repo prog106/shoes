@@ -10,12 +10,12 @@ class Answerbiz extends CI_Model {
     }
 
     // 답글 저장 처리
-    public function answer($answer, $mem_srl, $mem_level, $que_srl) { // {{{
+    public function answer($answer, $hashtag=null, $mem_srl, $mem_level, $mem_picture=null, $que_srl) { // {{{
         try {
             $this->db->trans_begin();
 
             // 답글 저장
-            $result = self::save_answer($answer, $mem_srl, $mem_level, $que_srl);
+            $result = self::save_answer($answer, $hashtag, $mem_srl, $mem_level, $mem_picture, $que_srl);
             if($result['result'] === 'error') throw new Exception($result['msg']);
             $step = $result['data'];
             // 질문 글 갱신
@@ -36,7 +36,7 @@ class Answerbiz extends CI_Model {
     } // }}}
 
     // 답글 저장
-    public function save_answer($answer, $mem_srl, $mem_level, $que_srl) { // {{{
+    public function save_answer($answer, $hashtag=null, $mem_srl, $mem_level, $mem_picture=null, $que_srl) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(!empty($que_srl)) $sql_param['que_srl'] = $que_srl;
@@ -45,8 +45,10 @@ class Answerbiz extends CI_Model {
         else return $error_result;
         if(!empty($mem_level)) $sql_param['mem_level'] = $mem_level;
         else return $error_result;
+        if(!empty($mem_picture)) $sql_param['mem_picture'] = $mem_picture;
         if(!empty($answer)) $sql_param['answer'] = $answer;
         else return $error_result;
+        $sql_param['hashtag'] = $hashtag;
         $sql_param['create_at'] = YMD_HIS;
         return ok_result($this->answerdao->save_answer($sql_param));
     } // }}}
