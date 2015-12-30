@@ -379,3 +379,39 @@ if(!function_exists('translate_status')) {
         return $status_text;
     } // }}}
 }
+
+if(!function_exists('convert_hashtag')) {
+    function convert_hashtag($text='', $nl2br=true){ // {{{
+        $text = convert_text($text, $nl2br);
+        $regex = "/#([가-힝a-zA-Z0-9_]+)/";
+        $str = preg_replace($regex, '<a href="/search/hashtag/$1">$0</a>', $text);
+        return $str;
+    } // }}}
+}
+
+if(!function_exists('convert_text')) {
+    function convert_text($text='', $nl2br=true){ // {{{
+        if($nl2br) {
+            $str = nl2br(strip_tags($text));
+        } else {
+            $str = strip_tags($text);
+        }
+        return $str;
+    } // }}}
+}
+
+if(!function_exists('hashtag')) {
+    function hashtag($text='', $nl2br=true){ // {{{
+        $text = convert_text($text, $nl2br);
+        $regex = "/#([가-힝a-zA-Z0-9_]+)/";
+        $word = array();
+        preg_match_all($regex, $text, $word);
+        $str = null;
+        if(!empty($word[1])) {
+            $str = implode(",", $word[1]); // a,b,c
+            //$str = implode(" ", $word[0]); // #a #b #c
+            //$str = preg_replace($regex, '<a href="hashtag#$1">$0</a>', $str);
+        }
+        return $str;
+    } // }}}
+}

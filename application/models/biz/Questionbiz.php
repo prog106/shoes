@@ -10,7 +10,7 @@ class Questionbiz extends CI_Model {
     }
 
     // 질문 저장
-    public function save_question($question, $mem_srl, $mem_name, $mem_level, $mem_picture, $main_start=null, $main_end=null, $start=null) { // {{{
+    public function save_question($question, $hashtag, $mem_srl, $mem_name, $mem_level, $mem_picture, $main_start=null, $main_end=null, $start=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(!empty($mem_srl)) $sql_param['mem_srl'] = $mem_srl;
@@ -27,6 +27,7 @@ class Questionbiz extends CI_Model {
         if(!empty($mem_picture)) $sql_param['mem_picture'] = $mem_picture;
         if(!empty($question)) $sql_param['question'] = $question;
         else return $error_result;
+        $sql_param['hashtag'] = $hashtag;
         if(!empty($start)) $sql_param['start'] = $start;
         else $sql_param['start'] = date('Y-m-d');
         if(!empty($main_start)) $sql_param['main_start'] = $main_start;
@@ -37,12 +38,13 @@ class Questionbiz extends CI_Model {
     } // }}}
 
     // 질문 업데이트
-    public function update_question($que_srl, $question, $mem_srl, $start=null, $main_start=null, $main_end=null) { // {{{
+    public function update_question($que_srl, $question, $hashtag, $mem_srl, $start=null, $main_start=null, $main_end=null) { // {{{
         $error_result = error_result('필수값이 누락되었습니다.');
         $sql_param = array();
         if(empty($que_srl)) return $error_result;
         if(!empty($question)) $sql_param['question'] = $question;
         else return $error_result;
+        $sql_param['hashtag'] = $hashtag;
         if(empty($mem_srl)) return $error_result;
         if(!empty($start)) $sql_param['start'] = $start;
         if(!empty($main_start)) $sql_param['main_start'] = $main_start;

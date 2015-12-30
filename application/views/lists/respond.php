@@ -12,7 +12,7 @@ foreach($list as $k => $v) {
                             <div class="media-body">
                                 <img src="<?=(!empty($v['mem_picture'] && $v['mem_level'] !== 'manager')?$v['mem_picture']:"/static/image/komment.png")?>" width="35" class="swipeimg"><br>
                                 <span style="font-size:11px;line-height:25px;"><?=($v['mem_level'] !== 'manager')?$v['mem_name']:"Komment"?></span>
-                                <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$v['que_srl']?>"><?=nl2br(strip_tags($v['question']))?></h4>
+                                <h4 class="media-heading link" style="line-height:25px;cursor:pointer;" data-link="/answer/view/<?=$v['que_srl']?>"><?=convert_hashtag($v['question'])?></h4>
                                 <span style="font-size:11px;">응답 <?=number_format($v['respond'])?> &nbsp; 좋아요 <span id="likecount<?=$v['que_srl']?>"><?=number_format($v['likes'])?></span></span>
                             </div>
                         </div>

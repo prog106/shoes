@@ -1,28 +1,29 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Question extends CI_Controller {
+class Search extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('biz/Questionbiz', 'questionbiz');
     }
 
-    private function manager($member) { // {{{
-        if(empty($member)) {
-            alertmsg_move('로그인 후 이용해 주세요', '/');
+    // hashtag 로 검색 
+    public function hashtag($search='') { // {{{
+        if(empty($search)) {
+            redirect('/', 'refresh');
             die;
         }
-    } // }}}
 
-    // 질문 리스트 & 올리기 폼
-    public function index() { // {{{
+        echo urldecode($search);
+        // 검색 결과 가져와야 됨. 질문과 댓글 어떻게 가져올지... 생각좀 해봐야 될듯
+        die;
         $member = $this->session->userdata('loginmember');
-        self::manager($member);
+
 
         $data = array();
         $data['member'] = $member;
-        load_view('question/index', $data);
+        load_view('search/index', $data);
     } // }}}
 
     // 질문 올리기

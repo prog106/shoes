@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?
 if(!empty($question)) {
 ?>
-    <meta property="og:title" content="<?=nl2br(strip_tags($question['question']))?>" />
+    <meta property="og:title" content="<?=convert_text($question['question'], false)?>" />
     <meta property="og:url" content="http://shoes.prog106.indoproc.xyz<?=$this->input->server('REQUEST_URI', true)?>" />
     <meta property="og:image" content="http://shoes.prog106.indoproc.xyz/static/img/komment.png" />
 <?

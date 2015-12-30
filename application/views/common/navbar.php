@@ -92,6 +92,6 @@ $(function() {
     <header id="header">
         <span style="font-size:20px;margin-top:9px;position:absolute;top:0;left:50%;margin-left:-30px;padding:6px 5px;cursor:pointer;" id="gohome">코멘트</span>
         <span class="button menu-button-left" style="cursor:pointer"></span>
-        <span class="button" onclick="history.back();" style="cursor:pointer;right:0px;border-left:1px solid #ddd;background-image:url('');font-size:25px;line-height:55px;padding-left:10px;"><span class="glyphicon glyphicon-arrow-left" style="color:#666"></span></span>
+        <!-- span class="button" onclick="history.back();" style="cursor:pointer;right:0px;border-left:1px solid #ddd;background-image:url('');font-size:25px;line-height:55px;padding-left:10px;"><span class="glyphicon glyphicon-arrow-left" style="color:#666"></span></span -->
     </header>
     <div class="container theme-showcase" role="main" style="padding-top:10px">
