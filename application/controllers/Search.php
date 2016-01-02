@@ -10,6 +10,7 @@ class Search extends CI_Controller {
 
     // hashtag 로 검색 
     public function hashtag($search='') { // {{{
+        $member = $this->session->userdata('loginmember');
         if(empty($search)) {
             redirect('/', 'refresh');
             die;
@@ -17,6 +18,7 @@ class Search extends CI_Controller {
 
         $data = array();
         $data['search'] = urldecode($search);
+        $data['member'] = $member;
         load_view('search/index', $data);
     } // }}}
 
